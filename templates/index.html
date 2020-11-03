@@ -15,19 +15,20 @@
         </div>
         <ul class="nav navbar-nav">
           <li><a href="/listGlobalPosts">Global</a></li>
-          <li><a href="/listPersons/mine">My Persons</a></li>
-          <li><a href="/listGroups/mine">My Groups</a></li>
-          <li><a href="/listPosts/mine">My Posts</a></li>
+          <li><a href="/listPersons">My Persons</a></li>
+          <li><a href="/listGroups">My Groups</a></li>
+          <li><a href="/listPosts">My Posts</a></li>
         </ul>
         <p class="navbar-text navbar-right">
           {% if userEmail %}
           
+          {{userEmail}}
           <a href="/logout">
             {% if userImageUrl %}
               <img class="img-circle" src={{userImageURL}} width="24">
             {% endif %}
             
-            ${userEmail}
+          Log Out  
           </a>
           
           {% else %}

@@ -6,11 +6,15 @@ import sys
 app = Flask(__name__)
 
 @app.route("/")
-def articles():
+@app.route("/index")
+def index():
 
-    return render_template('index.html')
+    return render_template('index.html', userEmail="secregister01@gmail.com")
 
+@app.route("/listPersons")
+def list_persons():
 
+	return render_template("list_persons.html")
 
 # --------pre calculation-----------
 print("Server start.")

@@ -1,0 +1,72 @@
+<html lang="en">
+  <style>
+  .grid-container {
+      display: grid;
+      grid-template-columns: 360px 360px 360px ;
+      grid-gap:10px;
+      padding: 10px;
+  }
+  .media {
+      display: grid;
+      text-align:left;
+      padding: 15px;
+      margin-top : 0px;
+      background-color : rgba(172, 169, 169, 0.1);
+  }
+  .media-left{
+      padding-left:10px;
+  }
+  </style>
+
+  <head>
+    <title>Personshelf</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+  </head>
+
+
+  <body>
+    <div class="container">
+
+        <h3>Persons</h3>
+        <div>
+            <a href="/createPerson" class="btn btn-success btn-sm">
+                <i class="glyphicon glyphicon-plus"></i>
+                Add person
+            </a>
+        </div><br>
+        <div class="grid-container">
+          
+          {% if persons %}
+              <c:forEach items="${persons}" var="person">
+                  <div class="media">
+                    <a href="/readPerson?id=${person.id}">
+                      <div class="media-left">
+                        <img alt="ahhh" height="100"src="${fn:escapeXml(not empty person.imageUrl?person.imageUrl:'https://image.flaticon.com/icons/svg/747/747545.svg')}">
+                      </div>
+                      <div class="media-body">
+                        <h4>${fn:escapeXml(person.first)}</h4>
+                        <p>${fn:escapeXml(person.last)}</p>
+                        <p>${fn:escapeXml(person.jobTitle)}</p>
+                        <p>${fn:escapeXml(person.description)}</p>
+                      </div>
+                    </a>
+                  </div>
+              </c:forEach>
+              <c:if test="${not empty personCursor}">
+                 <nav>
+                   <ul class="pager">
+                     <li><a href="?personCursor=${fn:escapeXml(personCursor)}">More</a></li>
+                   </ul>
+                 </nav>
+              </c:if>
+          {% else %}
+              <p>No persons found</p>
+          {% endif %}
+          
+        </div>
+
+    </div>
+  <body>
+<html>
