@@ -39,28 +39,28 @@
         <div class="grid-container">
           
           {% if persons %}
-              <c:forEach items="${persons}" var="person">
+              {% for person in persons %}
                   <div class="media">
-                    <a href="/readPerson?id=${person.id}">
+                    <a href="/viewPerson?id={{person.id}}">
                       <div class="media-left">
-                        <img alt="ahhh" height="100"src="${fn:escapeXml(not empty person.imageUrl?person.imageUrl:'https://image.flaticon.com/icons/svg/747/747545.svg')}">
+                        <img alt="ahhh" height="100"src="https://image.flaticon.com/icons/svg/747/747545.svg">
                       </div>
                       <div class="media-body">
-                        <h4>${fn:escapeXml(person.first)}</h4>
-                        <p>${fn:escapeXml(person.last)}</p>
-                        <p>${fn:escapeXml(person.jobTitle)}</p>
-                        <p>${fn:escapeXml(person.description)}</p>
+                        <h4>{{person.first}}</h4>
+                        <p>{{person.last}}</p>
+                        <p>{{person.jobTitle}}</p>
+                        <p>{{person.description}}</p>
                       </div>
                     </a>
                   </div>
-              </c:forEach>
-              <c:if test="${not empty personCursor}">
+              {% endfor %}
+              {% if personCursor %}
                  <nav>
                    <ul class="pager">
-                     <li><a href="?personCursor=${fn:escapeXml(personCursor)}">More</a></li>
+                     <li><a href="?personCursor={{personCursor}}">More</a></li>
                    </ul>
                  </nav>
-              </c:if>
+              {% endif %}
           {% else %}
               <p>No persons found</p>
           {% endif %}

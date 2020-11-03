@@ -1,0 +1,168 @@
+<html lang="en">
+	<head>
+	<title>Personshelf</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+	</head>
+
+	<style>
+		.grid-container {
+		    display: grid;
+		    grid-template-columns: 360px 360px 360px ;
+		    grid-gap:10px;
+		    padding: 10px;
+		    margin-top : 0px;
+		}}
+		.profile {
+		    display: grid;
+		    text-align:left;
+		    padding: 15px;
+		    margin-top: 0px;
+		    background-color : rgba(172, 169, 169, 0.1);
+		}}
+		.media-left{
+		    padding-left:10px;
+		}}
+		.media{
+		    margin-top : 0px;
+		}}
+	</style>
+
+	<body>
+		<div class="container">
+		    <h3>Person</h3>
+		    <div class="btn-group">
+		        <a href="/updatePerson?id={{person.id}}" class="btn btn-primary btn-sm">
+		            <i class="glyphicon glyphicon-edit"></i>
+		            Edit person
+		        </a>
+		        <a href="/deletePerson?id={{person.id}}" class="btn btn-danger btn-sm">
+		            <i class="glyphicon glyphicon-trash"></i>
+		            Delete person
+		        </a>
+		    </div>
+
+		    <div class="profile">
+		        <div class="media-left">
+		          <img class="person-image" height="100" src="https://image.flaticon.com/icons/svg/747/747545.svg">
+		        </div>
+		        <div class="media-body">
+		          <h4 class="person-first">{{person.first}}</h4>
+		          <h5 class="person-last">{{person.last}}</h5>
+		          <h5 class="person-email">Email Address : <a href="mailto:{{person.email}}">{{person.email}}</a></h5>
+		          <h5 class="person-age">{{person.age}}</h5>
+		          <h5 class="person-jobTitle">{{person.jobTitle}}</h5>
+		          <h5 class="person-description">{{person.description}}</h5>
+		          <small class="person-added-by">Added by
+		            {{person.createdBy}}</small>
+		        </div>
+		    </div><br>
+
+		    
+		    <h3>Social Medias of the Person</h3>
+		    <div>
+		        <a href="/createSocialMedia?personId={{person.id}}" class="btn btn-primary btn-sm">
+		            <i class="glyphicon glyphicon-edit"></i>
+		            Add Social Media For This Person
+		        </a>
+		    </div><br>
+
+		    <div class="container">
+		        
+		        {% if socialMedias %}
+		            
+		                {% for socialMedia in socialMedias%}
+		                    <div>
+		                        <div class="btn-group" style="display:inline">
+		                            <a href="/deleteSocialMedia?socialMediaId={{socialMedia.id}}&personId={{person.id}}" class="btn btn-danger btn-sm">
+		                              <i class="glyphicon glyphicon-trash"></i>
+		                              Delete
+		                            </a>
+		                        </div>
+		                        <div class="container">
+		                            <p>{{socialMedia.socialMediaName}} : <a href={{socialMedia.socialMediaLink}}>{{socialMedia.socialMediaLink}}</a></p>
+		                        </div>
+		                    </div><br>
+		                {% endfor %}
+
+		                
+		                {% if socialMediaCursor %}
+		                     <nav>
+		                       <ul class="pager">
+		                         <li><a href="?id={{person.id}}&socialMediaCursor={{(socialMediaCursor)}}">More</a></li>
+		                       </ul>
+		                     </nav>
+		                {% endif %}
+		            
+		        {% else %}
+		        	<p>No Social Medias found</p>
+		        {% endif %}
+		    </div>
+		    
+		    <h3>Groups of the Person</h3>
+		    <div class="grid-container">
+		        {% if groups %}
+		            {% for group in groups %}
+		                    <div class="media">
+		                      <a href="/readGroup?id={{group.id}}">
+		                        <div class="media-left">
+		                          <img alt="ahhh" height="150"src='https://image.flaticon.com/icons/svg/872/872186.svg'>
+		                        </div>
+
+		                        <div class="media-body">
+		                          <h4>{{group.name}}</h4>
+		                          <p>{{group.description}}</p>
+		                        </div>
+		                      </a>
+		                    </div>
+		            {% endfor %}
+
+		            {% if groupCursor %}
+		                     <nav>
+		                       <ul class="pager">
+		                         <li><a href="?id={{person.id}}&groupCursor={{(groupCursor)}}">More</a></li>
+		                       </ul>
+		                     </nav>
+		                </c:if>
+		            {% endif %}
+		        {% else %}
+		        	<p>No groups found</p>
+		        {% endif %}
+		    </div>
+		    
+		    <h3>Posts tagged with the Person</h3>
+		    <div class="grid-container">
+		       
+		      	 {% if posts %}
+		         	{% for post in posts %}
+		                    <div class="media">
+		                      <a href="/readPost?id={{post.id}}">
+		                        <div class="media-left">
+		                          <img alt="ahhh" height="150"src="{{'https://image.flaticon.com/icons/svg/1395/1395832.svg'}}">
+		                        </div>
+		                        <div class="media-body">
+		                          <h4>{{post.content}}</h4>
+		                          <p>{{post.createdTime}}</p>
+		                          <p>{{post.visibility}}</p>
+		                        </div>
+		                      </a>
+		                    </div>
+		            {% endfor %}
+		                <div class="media">
+		                    {% if postCursor %}
+		                         <nav>
+		                           <ul class="pager">
+		                             <li><a href="?id={{person.id}}&postCursor={{(postCursor)}}">More</a></li>
+		                           </ul>
+		                         </nav>
+		                    {% endif %}
+		                </div>
+		        {% else %}
+		            <p>No posts found</p>
+		        {% endif %}
+		        
+		    </div>
+		</div>
+	</body>
+<html>
