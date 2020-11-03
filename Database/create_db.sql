@@ -62,6 +62,10 @@ CREATE TABLE social_media (
 
 CREATE TABLE post (
 	id INTEGER CHECK(id > 0),
+
+	file_url VARCHAR(50),
+	visibility VARCHAR(10),
+	create_time DATE,
 	created_by INTEGER,
 	PRIMARY KEY (id),
 	FOREIGN KEY(created_by) references my_user (id) ON UPDATE CASCADE ON DELETE CASCADE

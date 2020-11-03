@@ -20,20 +20,20 @@
           <li><a href="/listPosts/mine">My Posts</a></li>
         </ul>
         <p class="navbar-text navbar-right">
-          <c:choose>
-          <c:when test="${not empty userEmail}">
-          <!-- using pageContext requires jsp-api artifact in pom.xml -->
+          {% if userEmail %}
+          
           <a href="/logout">
-            <c:if test="${not empty userImageUrl}">
-              <img class="img-circle" src="${fn:escapeXml(userImageUrl)}" width="24">
-            </c:if>
-            ${fn:escapeXml(userEmail)}
+            {% if userImageUrl %}
+              <img class="img-circle" src={{userImageURL}} width="24">
+            {% endif %}
+            
+            ${userEmail}
           </a>
-          </c:when>
-          <c:otherwise>
+          
+          {% else %}
           <a href="/login">Login</a>
-          </c:otherwise>
-          </c:choose>
+          
+          {% endif %}
         </p>
       </div>
     </div><br>
