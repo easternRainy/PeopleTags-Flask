@@ -1,11 +1,68 @@
 <html lang="en">
-  <head>
-    <title>Personshelf</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
-  </head>
+	<head>
+		<title>People Tags</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+	</head>
 
+  	<style>
+		.grid-container {
+		    display: grid;
+		    grid-template-columns: 360px 360px 360px ;
+		    grid-gap:10px;
+		    padding: 10px;
+		    margin-top : 0px;
+		}}
+		.profile {
+		    display: grid;
+		    text-align:left;
+		    padding: 15px;
+		    margin-top: 0px;
+		    background-color : rgba(172, 169, 169, 0.1);
+		}}
+		.media-left{
+		    padding-left:10px;
+		}}
+		.media{
+		    margin-top : 0px;
+		}}
+	</style>
 
+  <body>
+  <body>
+    <div class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <div class="navbar-brand">People Tags</div>
+        </div>
+        <ul class="nav navbar-nav">
+          <li><a href="/listGlobalPosts">Global</a></li>
+          <li><a href="/listPersons">My Persons</a></li>
+          <li><a href="/listGroups">My Groups</a></li>
+          <li><a href="/listPosts">My Posts</a></li>
+        </ul>
+        <p class="navbar-text navbar-right">
+          {% if userEmail %}
+          
+          {{userEmail}}
+          <a href="/logout">
+            {% if userImageUrl %}
+              <img class="img-circle" src={{userImageURL}} width="24">
+            {% endif %}
+            
+          Log Out  
+          </a>
+          
+          {% else %}
+          <a href="/login">Login</a>
+          <a href="/register"> Register </a>
+          {% endif %}
+        </p>
+      </div>
+    </div><br>
 
+    {% block content %} {% endblock %}
+  </body>
+    
 <html>
