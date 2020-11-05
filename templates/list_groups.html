@@ -1,0 +1,47 @@
+{% extends "header.html" %}
+
+{% block content %}
+
+<div class="container">
+
+    <h3>Groups</h3>
+    <div>
+        <a href="/createGroup" class="btn btn-success btn-sm">
+            <i class="glyphicon glyphicon-plus"></i>
+            Add group
+        </a>
+    </div>
+    <div class="grid-container">
+      
+
+          {% if groups %}
+          	  {% for group in groups %}
+              
+                  <div class="media">
+                    <a href="/readGroup?id={{ group.id }}">
+                      <div class="media-left">
+                        <img alt="ahhh" height="200"src='https://image.flaticon.com/icons/svg/872/872186.svg'>
+                      </div>
+                      <div class="media-body">
+                        <h4>{{group.name}}</h4>
+                        <p>{{group.description}}</p>
+                      </div>
+                    </a>
+                  </div>
+              {% endfor %}
+              {% if groupCursor %}
+                 <nav>
+                   <ul class="pager">
+                     <li><a href="?groupCursor={{groupCursor}}">More</a></li>
+                   </ul>
+                 </nav>
+              </c:if>
+              {% endif %}
+          {% else %}
+          		<p>No groups found</p>
+          {% endif %}
+      
+    </div>
+</div>
+
+{% endblock %}

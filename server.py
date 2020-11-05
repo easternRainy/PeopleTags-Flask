@@ -1,7 +1,8 @@
 
 from flask import Flask, render_template
-
 import sys
+from test_ui import *
+
 
 app = Flask(__name__)
 
@@ -13,18 +14,32 @@ def index():
 
 @app.route("/listPersons")
 def list_persons():
-	persons = []
-	sicheng = {"first":"Sicheng", "last": "Zhou", "jobTitle": "Full Stack Developer", "description":"Crazy Guy"}
-	persons.append(sicheng)
+	
 	return render_template("list_persons.html", persons=persons)
 
 @app.route("/viewPerson")
 def view_person():
-	sicheng = {"first":"Sicheng", "last": "Zhou", "jobTitle": "Full Stack Developer", "description":"Crazy Guy"}
-	socialMedias = [{}]
-	groups = [{}]
-	return render_template("view_person.html", person=sicheng, socialMedias=socialMedias, groups=groups)
+	
+	return render_template("view_person.html", person=persons[0], groups=groups)
 
+
+@app.route("/addPerson", methods=['GET', 'POST'])
+def add_person():
+
+	return render_template("add_person.html")
+
+@app.route("/listGroups")
+def list_groups():
+
+	return render_template("list_groups.html", groups=groups)
+
+
+@app.route("/listPosts")
+def list_posts():
+
+	return render_template("list_posts.html", posts=posts)
+
+	
 # --------pre calculation-----------
 print("Server start.")
 # --------end of pre calculation-----------

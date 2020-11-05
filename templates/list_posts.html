@@ -1,0 +1,52 @@
+{% extends "header.html" %}
+
+{% block content %}
+
+<div class="container">
+
+<!-- [START list posts] -->
+  <h3>Posts</h3><br>
+  <div>
+      <a href="/createPost" class="btn btn-success btn-sm">
+        <i class="glyphicon glyphicon-plus"></i>
+        Add post
+      </a>
+  </div><br>
+
+  <div class="grid-container">
+      	{% if posts %}
+            {% for post in posts %}
+                  <div class="media">
+                        <div class="media-left">
+                            <a href="/readPost?id={{post.id}}">
+                                <img alt="ahhh" height="150" src='https://image.flaticon.com/icons/svg/1395/1395832.svg'>
+                            </a>
+                        </div>
+
+                      <div class="media-body">
+                          <br>
+                          <h4>{{post.content}}</h4>
+                          <p>{{post.visibility}}</p>
+                          <p>{{post.createdTime}}</p>
+                      </div>
+                  </div>
+            {% endfor %}
+               	{% if postCursor %}
+                 <nav>
+                   <ul class="pager">
+                     <li><a href="?postCursor={{postCursor}}">More</a></li>
+                   </ul>
+                 </nav>
+               	{% endif %}
+          
+        {% else %}
+          	<p>No posts found</p>
+        {% endif %}
+      
+  </div>
+
+<!-- [END list posts] -->
+
+</div>
+
+{% endblock %}
