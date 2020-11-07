@@ -7,7 +7,7 @@
 <!-- [START list posts] -->
   <h3>Posts</h3><br>
   <div>
-      <a href="/createPost" class="btn btn-success btn-sm">
+      <a href="/addPost" class="btn btn-success btn-sm">
         <i class="glyphicon glyphicon-plus"></i>
         Add post
       </a>
@@ -18,7 +18,7 @@
             {% for post in posts %}
                   <div class="media">
                         <div class="media-left">
-                            <a href="/readPost?id={{post.id}}">
+                            <a href="/viewPost?id={{post.id}}">
                                 <img alt="ahhh" height="150" src='https://image.flaticon.com/icons/svg/1395/1395832.svg'>
                             </a>
                         </div>

@@ -1,0 +1,26 @@
+{% extends "header.html" %}
+
+{% block content %}
+
+<div class="container">
+  <h3>
+    <c:out value="{{action}}" /> Post
+  </h3>
+
+  <form method="POST" action="{{destination}}" enctype="multipart/form-data">
+    <div class="form-post">
+      <label for="content">What you want to say</label>
+      <textarea name="content" id="content" class="form-control">{{post.content}}</textarea>
+    </div><br>
+
+    <div class="form-post">
+      <label for="visibility">Who can see this</label><br>
+      <input type="radio" name="visibility" value="toPublic" checked> Public<br>
+      <input type="radio" name="visibility" value="toPrivate"> Private<br>
+    </div><br>
+
+    <button type="submit" class="btn btn-success">Save</button>
+  </form>
+</div>
+
+{% endblock %}

@@ -1,0 +1,145 @@
+{% extends "header.html" %}
+
+{% block content %}
+
+<div class="container">
+    <h3>Post</h3>
+    <div class="btn-post">
+        <a href="/deletePost?id={{post.id}}" class="btn btn-danger btn-sm">
+          <i class="glyphicon glyphicon-trash"></i>
+          Delete post
+        </a>
+    </div><br>
+
+    <div class="profile">
+        <div class="media-left">
+          <img class="post-image" height="150" src='https://image.flaticon.com/icons/svg/1395/1395832.svg'>
+        </div>
+        <div class="media-body">
+          <div>
+              {% for token in tokens %}
+                  {% if token.property == 0 %}
+
+                      <h4 class="post-content" style="display:inline">{{token.content}}</h4>
+                  {% endif %}
+                  {% if token.property == 1 %}
+                      <h4 class="post-content" style="display:inline"><a href={{token.content}}>${token.content}</a></h4>
+                  {% endif %}
+              {% endfor %}
+          </div>
+          <p class="post-time">{{post.createdTime}}</p>
+          <p class="post-visibility">{{post.visibility}}</p>
+          <small class="post-added-by">Added by
+            {{post.createdBy}}</small>
+        </div>
+    </div>
+
+
+    <!-- [START list persons tagged with post] -->
+
+    <h3>Persons tagged with post</h3>
+    <!-- [START add person to this post button] -->
+      <div class="btn-post">
+          <a href="/tagPersonWithPost/list?id={{post.id}}" class="btn btn-primary btn-sm">
+            <i class="glyphicon glyphicon-edit"></i>
+            Tag Person with this post
+          </a>
+       </div><br>
+    <!-- [END add person to this post button] -->
+
+    <!-- [START list persons] -->
+
+    <div class="grid-container">
+
+        {% if personsWithPost %}
+            {% for person in personsWithPost %}
+                <div class="media">
+                  <a href="/viewPerson?id={{person.id}}">
+                    <div class="media-left">
+                      <img alt="ahhh" height="100"src='https://image.flaticon.com/icons/svg/747/747545.svg'>
+                    </div>
+                    <div class="media-body">
+                      <h4>{{person.first}}</h4>
+                      <p>{{person.last}}</p>
+                      <p>{{person.jobTitle}}</p>
+                      <p>{{person.description}}</p>
+                    </div><br>
+                  </a>
+                  <div class="btn-group">
+                      <a href="/deletePersonFromPost?postId={{post.id}}&personId={{person.id}}" class="btn btn-danger btn-sm">
+                          <i class="glyphicon glyphicon-trash"></i>
+                          Untag this Person
+                      </a>
+                  </div>
+                </div>
+            {% endfor %}
+            <div class="media">
+                {% if personCursor %}
+                     <nav>
+                       <ul class="pager">
+                         <li><a href="?id={{post.id}}&personCursor={{personCursor}}">More</a></li>
+                       </ul>
+                     </nav>
+                {% endif %}
+            </div>
+        {% else %}
+            <p>No persons found</p>
+        {% endif %}
+
+    </div>
+  <!-- [END list persons] -->
+
+  <!-- [START list groups] -->
+    <h3>Groups tagged with post</h3>
+
+    <!-- [START add group to this post button] -->
+      <div class="btn-post">
+          <a href="/tagGroupWithPost/list?id={{post.id}}" class="btn btn-primary btn-sm">
+            <i class="glyphicon glyphicon-edit"></i>
+            Tag Group with this post
+          </a>
+       </div><br>
+    <!-- [END add group to this post button] -->
+
+    <div class="grid-container">
+
+            {% if groupsWithPost %}
+                {% for group in groupsWithPost %}
+                    <div class="media">
+                      <a href="/viewGroup?id={{group.id}}">
+                        <div class="media-left">
+                          <img alt="ahhh" height="150"src='https://image.flaticon.com/icons/svg/872/872186.svg'>
+                        </div>
+
+                        <div class="media-body">
+                          <h4>{{group.name}}</h4>
+                          <p>{{group.description}}</p>
+                        </div><br>
+                        <div class="btn-group">
+                          <a href="/deleteGroupFromPost?postId={{post.id}}&groupId={{group.id}}" class="btn btn-danger btn-sm">
+                              <i class="glyphicon glyphicon-trash"></i>
+                              Untag this Group
+                          </a>
+                        </div>
+                      </a>
+                    </div>
+                {% endfor %}
+                <div class="media">
+                    {% if groupCursor %}
+                         <nav>
+                           <ul class="pager">
+                             <li><a href="?id={{post.id}}&groupCursor={{groupCursor}}">More</a></li>
+                           </ul>
+                         </nav>
+                    {% endif %}
+                </div>
+            {% else %}
+                <p>No groups found</p>
+            {% endif %}
+
+    </div>
+  <!-- [END list groups] -->
+
+</div>
+
+{% endblock %}

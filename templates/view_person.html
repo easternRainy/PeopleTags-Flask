@@ -33,7 +33,7 @@
 		    
 		    <h3>Social Medias of the Person</h3>
 		    <div>
-		        <a href="/createSocialMedia?personId={{person.id}}" class="btn btn-primary btn-sm">
+		        <a href="/addSocialMedia?personId={{person.id}}" class="btn btn-primary btn-sm">
 		            <i class="glyphicon glyphicon-edit"></i>
 		            Add Social Media For This Person
 		        </a>
@@ -76,7 +76,7 @@
 		        {% if groups %}
 		            {% for group in groups %}
 		                    <div class="media">
-		                      <a href="/readGroup?id={{group.id}}">
+		                      <a href="/viewGroup?id={{group.id}}">
 		                        <div class="media-left">
 		                          <img alt="ahhh" height="150"src='https://image.flaticon.com/icons/svg/872/872186.svg'>
 		                        </div>
@@ -108,7 +108,7 @@
 		      	 {% if posts %}
 		         	{% for post in posts %}
 		                    <div class="media">
-		                      <a href="/readPost?id={{post.id}}">
+		                      <a href="/viewPost?id={{post.id}}">
 		                        <div class="media-left">
 		                          <img alt="ahhh" height="150"src="{{'https://image.flaticon.com/icons/svg/1395/1395832.svg'}}">
 		                        </div>

@@ -1,0 +1,41 @@
+{% extends "header.html" %}
+
+{% block content %}
+
+
+<div class="container">
+<!-- [START list posts] -->
+  <figure>
+    <img src = "http://digitalgateway.in/blogimages/81749-banner3.png" width = "1100">
+  </figure>
+  <h3>Global Posts</h3><br>
+  <div class="grid-container">
+            {% if posts %}
+              {% for post in posts %}
+                  <div class="media">
+                      <div class="media-left" style = "margin : 5px">
+                        <img alt="ahhh" height="100"src='https://image.flaticon.com/icons/svg/1395/1395832.svg'>
+                      </div>
+                      <div class="media-body">
+                          <h4>{{post.content}}</h4>
+                          <p>{{post.createdTime}}</p>
+                          <p>{{post.createdBy}}</p>
+                      </div>
+                  </div>
+              {% endfor %}
+              {% if postCursor %}
+                 <nav>
+                   <ul class="pager">
+                     <li><a href="?postCursor={{postCursor}}">More</a></li>
+                   </ul>
+                 </nav>
+              {% endif %}
+          {% else %}
+              <p>No posts to be shared</p>
+          {% endif %}
+  </div>
+
+<!-- [END list posts] -->
+
+</div>
+{% endblock %}

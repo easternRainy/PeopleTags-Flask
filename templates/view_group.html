@@ -47,7 +47,7 @@
            {% if personsInGroup %}
                 {% for person in personsInGroup %}
                     <div class="media">
-                      <a href="/readPerson?id={{person.id}}">
+                      <a href="/viewPerson?id={{person.id}}">
                         <div class="media-left">
                           <img alt="ahhh" height="100"src='https://image.flaticon.com/icons/svg/747/747545.svg'>
                         </div>
@@ -89,7 +89,7 @@
           {% if postsOfGroup %}
                   {% for post in postsOfGroup %}
                       <div class="media">
-                        <a href="/readPost?id={{post.id}}">
+                        <a href="/viewPost?id={{post.id}}">
                           <div class="media-left">
                             <img alt="ahhh" height="150"src='https://image.flaticon.com/icons/svg/1395/1395832.svg'>
                           </div>
