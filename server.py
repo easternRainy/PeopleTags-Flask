@@ -1,7 +1,7 @@
 
 from flask import Flask, render_template
 import sys
-from test_ui import *
+from Test.test_ui import *
 
 
 app = Flask(__name__)
@@ -20,8 +20,12 @@ def list_persons():
 @app.route("/viewPerson")
 def view_person():
 	
-	return render_template("view_person.html", person=persons[0], groups=groups)
+	return render_template("view_person.html", person=persons[0], groups=groups, posts=posts)
 
+@app.route("/viewGroup")
+def view_group():
+
+	return render_template("view_group.html", group=groups[0], personsInGroup=persons, postsOfGroup=posts)
 
 @app.route("/addPerson", methods=['GET', 'POST'])
 def add_person():
@@ -39,7 +43,7 @@ def list_posts():
 
 	return render_template("list_posts.html", posts=posts)
 
-	
+
 # --------pre calculation-----------
 print("Server start.")
 # --------end of pre calculation-----------

@@ -1,0 +1,118 @@
+{% extends "header.html" %}
+
+{% block content %}
+
+<div class="container">
+    <h3>Group</h3>
+    <div class="btn-group">
+        <a href="/updateGroup?id={{group.id}}" class="btn btn-primary btn-sm">
+          <i class="glyphicon glyphicon-edit"></i>
+          Edit group
+        </a>
+        <a href="/deleteGroup?id={{group.id}}" class="btn btn-danger btn-sm">
+          <i class="glyphicon glyphicon-trash"></i>
+          Delete group
+        </a>
+    </div><br>
+
+    <div class="profile">
+        <div class="media-left">
+          <img class="group-image" height="150" src='https://image.flaticon.com/icons/svg/872/872186.svg'>
+        </div>
+        <div class="media-body">
+          <h4 class="group-name">
+            {{group.name}}
+          </h4>
+          <p class="group-description">{{group.description}}</p>
+          <small class="group-added-by">Added by
+            {{group.createdBy}}</small>
+        </div>
+    </div>
+
+    <!-- [START list persons in this group] -->
+    <h3>Persons in this group</h3>
+
+    <!-- [START add person in this group button] -->
+    <div class="btn-group">
+        <a href="/addPersonToGroup/list?id={{group.id}}" class="btn btn-primary btn-sm">
+            <i class="glyphicon glyphicon-edit"></i>
+            Add Person to this group
+        </a>
+
+    </div><br>
+    <!-- [END add person in this group button] -->
+
+    <div class="grid-container">
+
+           {% if personsInGroup %}
+                {% for person in personsInGroup %}
+                    <div class="media">
+                      <a href="/readPerson?id={{person.id}}">
+                        <div class="media-left">
+                          <img alt="ahhh" height="100"src='https://image.flaticon.com/icons/svg/747/747545.svg'>
+                        </div>
+                        <div class="media-body">
+                          <h4>{{person.first}}</h4>
+                          <p>{{person.last}}</p>
+                          <p>{{person.jobTitle}}</p>
+                          <p>{{person.description}}</p>
+                        </div><br>
+                        <div class="btn-group">
+                            <a href="/deletepersonfromgroup?groupId={{group.id}}&personId={{person.id}}" class="btn btn-danger btn-sm">
+                                <i class="glyphicon glyphicon-trash"></i>
+                                Delete Person
+                            </a>
+                        </div>
+                      </a>
+                    </div>
+                {% endfor %}
+
+                <div class="media">
+                    {% if personCursor %}
+                         <nav>
+                           <ul class="pager">
+                             <li><a href="?id={{group.id}}&personCursor={{personCursor}}">More</a></li>
+                           </ul>
+                         </nav>
+                   {% endif %}
+                </div>
+            {% else %}
+                <p>No persons found</p>
+            {% endif %}
+
+    </div>
+    <!-- [END list persons in this group] -->
+
+    <!-- [START list posts of the group] -->
+      <h3>Posts tagged with the Group</h3>
+      <div class="grid-container">
+          {% if postsOfGroup %}
+                  {% for post in postsOfGroup %}
+                      <div class="media">
+                        <a href="/readPost?id={{post.id}}">
+                          <div class="media-left">
+                            <img alt="ahhh" height="150"src='https://image.flaticon.com/icons/svg/1395/1395832.svg'>
+                          </div>
+                          <div class="media-body">
+                            <h4>{{post.content}}</h4>
+                            <p>{{post.createdTime}}</p>
+                            <p>{{post.visibility}}</p>
+                          </div>
+                        </a>
+                      </div>
+                  {% endfor %}
+                  {% if postCursor %}
+                       <nav>
+                         <ul class="pager">
+                           <li><a href="?id={{group.id}}&postCursor={{postCursor}}">More</a></li>
+                         </ul>
+                       </nav>
+                  {% endif %}
+           {% else %}
+                <p>No posts found</p>
+           {% endif %}
+
+      </div>
+    <!-- [END list posts of the group] -->
+</div>
+{% endblock %}
