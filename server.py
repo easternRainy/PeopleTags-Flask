@@ -7,6 +7,7 @@ from Test.test_ui import *
 from config import Config
 
 from Forms.account import LoginForm, RegisterForm
+from Forms.entity import PersonForm, GroupForm, PostForm, SocialMediaForm
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -77,27 +78,38 @@ def view_post():
 
 @app.route("/addPerson", methods=['GET', 'POST'])
 def add_person():
-	if request.method == 'GET':
-		return render_template("add_person.html", person={})
-	else:
-		# return render_template("add_person.html", person=persons[0])
-		return "hello world"
+	form = PersonForm()
+	if form.validate_on_submit():
+
+		return redirect(url_for('list_persons'))
+	return render_template('add_person.html', title='Add Person', form=form)
+
 
 @app.route("/addGroup", methods=['GET', 'POST'])
 def add_group():
+	form = GroupForm()
+	if form.validate_on_submit():
 
-	return render_template("add_group.html", group=groups[0])
+		return redirect(url_for('list_groups'))
+	return render_template('add_group.html', title='Add Group', form=form)
 
 @app.route("/addPost", methods=['GET', 'POST'])
 def add_post():
+	form = PostForm()
+	if form.validate_on_submit():
 
-	return render_template("add_post.html", post=posts[0])
+		return redirect(url_for('list_posts'))
+	return render_template('add_post.html', title='Add Post', form=form)
 
-
-@app.route("/addSocialMedia", methods=['GET', 'POST'])
+@app.route("/addSocialMedia?personId=<person_id>", methods=['GET', 'POST'])
 def add_social_media():
+	person_id = request.args.get("personId")
+	print(person_id)
+	form = PersonForm()
+	if form.validate_on_submit():
 
-	return render_template("add_social_media.html", socialMedia=socialMedias[0])
+		return redirect(url_for('list_persons'))
+	return render_template('add_social_media.html', title='Add Social Media', form=form)
 
 
 # --------pre calculation-----------

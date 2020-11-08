@@ -2,55 +2,36 @@
 
 {% block content %}
 <div class="container">
-  <h3>
-    <c:out value={{ action }} /> person
-  </h3>
+    <h1>Add person</h1>
+    <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.firstname.label }}<br>
+            {{ form.firstname(size=32) }}
+        </p>
+        <p>
+            {{ form.lastname.label }}<br>
+            {{ form.lastname(size=32) }}
+        </p>
+        <p>
+            {{ form.email.label }}<br>
+            {{ form.email(size=32) }}
+        </p>
+        <p>
+            {{ form.age.label }}<br>
+            {{ form.age(size=32) }}
+        </p>
+        <p>
+            {{ form.job.label }}<br>
+            {{ form.job(size=32) }}
+        </p>
+        <p>
+            {{ form.description.label }}<br>
+            {{ form.description(size=32) }}
+        </p>
 
-  <form method="POST" action={{ destination }} enctype="multipart/form-data">
-
-    <div class="form-group">
-      <label for="first">First</label>
-      <input type="text" name="first" id="first" value={{person.first}} class="form-control" />
-    </div>
-
-    <div class="form-group">
-      <label for="last">Last</label>
-      <input type="text" name="last" id="last" value={{person.last}} class="form-control" />
-    </div>
-
-    <div class="form-group">
-          <label for="email">Email Address</label>
-          <input type="text" name="email" id="email" value={{person.email}} class="form-control" />
-    </div>
-
-    <div class="form-group">
-      <label for="age">Age</label>
-      <input type="text" name="age" id="age" value="{{ person.age }}" class="form-control" />
-    </div>
-
-    <div class="form-group">
-      <label for="jobTitle">Job Title</label>
-      <input type="text" name="jobTitle" id="jobTitle" value={{person.jobTitle}} class="form-control" />
-    </div>
-
-
-    <div class="form-group">
-      <label for="description">Description</label>
-      <textarea name="description" id="description" class="form-control">{{person.description}}</textarea>
-    </div>
-
-    <div class="form-group ${isCloudStorageConfigured ? '' : 'hidden'}">
-      <label for="image">Cover Image</label>
-      <input type="file" name="file" id="file" class="form-control" />
-    </div>
-
-    <div class="form-group hidden">
-      <label for="imageUrl">Cover Image URL</label>
-      <input type="hidden" name="id" value={{person.id}} />
-      <input type="text" name="imageUrl" id="imageUrl" value={{person.imageUrl}} class="form-control" />
-    </div>
-
-    <button type="submit" class="btn btn-success">Save</button>
-  </form>
+        <p>{{ form.submit() }}</p>
+    </form>
+</div>
 </div>
 {% endblock %}
