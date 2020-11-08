@@ -45,18 +45,18 @@
         <p class="navbar-text navbar-right">
           {% if userEmail %}
           
-          {{userEmail}}
-          <a href="/logout">
-            {% if userImageUrl %}
-              <img class="img-circle" src={{userImageURL}} width="24">
-            {% endif %}
-            
-          Log Out  
-          </a>
+              {{userEmail}}
+              <a href="/logout">
+                {% if userImageUrl %}
+                  <img class="img-circle" src={{userImageURL}} width="24">
+                {% endif %}
+
+              Log Out
+              </a>
           
           {% else %}
-          <a href="/login">Login</a>
-          <a href="/register"> Register </a>
+              <a href="/login">Login</a>
+              <a href="/register"> Register </a>
           {% endif %}
         </p>
       </div>
