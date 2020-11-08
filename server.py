@@ -101,14 +101,14 @@ def add_post():
 		return redirect(url_for('list_posts'))
 	return render_template('add_post.html', title='Add Post', form=form)
 
-@app.route("/addSocialMedia?personId=<person_id>", methods=['GET', 'POST'])
+@app.route("/addSocialMedia", methods=['GET', 'POST'])
 def add_social_media():
 	person_id = request.args.get("personId")
-	print(person_id)
-	form = PersonForm()
+
+	form = SocialMediaForm()
 	if form.validate_on_submit():
 
-		return redirect(url_for('list_persons'))
+		return redirect(url_for('view_person'))
 	return render_template('add_social_media.html', title='Add Social Media', form=form)
 
 
