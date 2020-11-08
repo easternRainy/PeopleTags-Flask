@@ -2,7 +2,7 @@
 
 {% block content %}
 <div class="container">
-    <h1>Sign In</h1>
+    <h1>Register</h1>
     <form action="" method="post" novalidate>
         {{ form.hidden_tag() }}
         <p>
@@ -13,7 +13,11 @@
             {{ form.password.label }}<br>
             {{ form.password(size=32) }}
         </p>
-        <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
+        <p>
+            {{ form.passwordVerify.label }}<br>
+            {{ form.passwordVerify(size=32) }}
+        </p>
+
         <p>{{ form.submit() }}</p>
     </form>
 </div>

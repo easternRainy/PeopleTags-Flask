@@ -6,22 +6,28 @@ import sys
 from Test.test_ui import *
 from config import Config
 
-from Forms.login_form import LoginForm
-
+from Forms.account import LoginForm, RegisterForm
 
 app = Flask(__name__)
 app.config.from_object(Config)
 print(app.config['SECRET_KEY'])
 
 @app.route("/")
+@app.route('/listGlobalPosts')
 def index():
     return render_template("list_global_posts.html", posts=posts)
 
 @app.route('/listGlobalPosts/<userEmail>')
 def index_with_email(userEmail):
-	print("index with email is running")
 	return render_template("list_global_posts.html", posts=posts, userEmail=userEmail)
 
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+	form = RegisterForm()
+	if form.validate_on_submit():
+		user = form.username.data
+		return redirect(url_for('index_with_email', userEmail=user))
+	return render_template('register.html', title='Register', form=form)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -33,6 +39,10 @@ def login():
 		# url_for('function_name')
 		return redirect(url_for('index_with_email', userEmail=user))
 	return render_template('login.html', title='Sign In', form=form)
+
+@app.route('/logout')
+def logout():
+	return render_template("list_global_posts.html", posts=posts)
 
 @app.route("/listPersons")
 def list_persons():
