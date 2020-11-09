@@ -6,12 +6,22 @@ import sys
 from Test.test_ui import *
 from config import Config
 
-from Forms.account import LoginForm, RegisterForm
-from Forms.entity import PersonForm, GroupForm, PostForm, SocialMediaForm
+from Database.connection import *
+from Database.entity import *
 
+from Forms.account import *
+from Forms.entity import *
+
+from Objects.entity import *
+
+# --------pre calculation-----------
 app = Flask(__name__)
 app.config.from_object(Config)
-print(app.config['SECRET_KEY'])
+conn, cur = connect_db()
+print("Server start.")
+# --------end of pre calculation-----------
+
+
 
 @app.route("/")
 @app.route('/listGlobalPosts')
@@ -80,6 +90,9 @@ def view_post():
 def add_person():
 	form = PersonForm()
 	if form.validate_on_submit():
+		new_person = PersonFrom_to_Person(form)
+		personDao = PersonDao()
+		personDao.to_db(new_person, conn, cur)
 
 		return redirect(url_for('list_persons'))
 	return render_template('add_person.html', title='Add Person', form=form)
@@ -89,6 +102,9 @@ def add_person():
 def add_group():
 	form = GroupForm()
 	if form.validate_on_submit():
+		new_group = GroupForm_to_Group(form)
+		groupDao = GroupDao()
+		groupDao.to_db(new_group, conn, cur)
 
 		return redirect(url_for('list_groups'))
 	return render_template('add_group.html', title='Add Group', form=form)
@@ -97,6 +113,9 @@ def add_group():
 def add_post():
 	form = PostForm()
 	if form.validate_on_submit():
+		new_post = PostForm_to_Post(form)
+		postDao = PostDao()
+		postDao.to_db(new_post, conn, cur)
 
 		return redirect(url_for('list_posts'))
 	return render_template('add_post.html', title='Add Post', form=form)
@@ -112,7 +131,4 @@ def add_social_media():
 	return render_template('add_social_media.html', title='Add Social Media', form=form)
 
 
-# --------pre calculation-----------
-print("Server start.")
-# --------end of pre calculation-----------
 
