@@ -8,11 +8,13 @@ from config import Config
 
 from Database.connection import *
 from Database.entity import *
+from Database.account import *
 
 from Forms.account import *
 from Forms.entity import *
 
 from Objects.entity import *
+from Objects.account import *
 
 # --------pre calculation-----------
 app = Flask(__name__)
@@ -36,19 +38,29 @@ def index_with_email(userEmail):
 def register():
 	form = RegisterForm()
 	if form.validate_on_submit():
-		user = form.username.data
-		return redirect(url_for('index_with_email', userEmail=user))
+		new_user = RegisterForm_to_User(form)
+
+		userDao = UserDao()
+		userDao.to_db(new_user, conn, cur)
+
+		return redirect(url_for('index_with_email', userEmail=new_user.username))
 	return render_template('register.html', title='Register', form=form)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
 	form = LoginForm()
 	if form.validate_on_submit():
-		# flash(f"Login requested for user {form.username.data} successed!")
-		user = form.username.data
 
-		# url_for('function_name')
-		return redirect(url_for('index_with_email', userEmail=user))
+		username = form.username.data
+		password = form.password.data
+		userDao = UserDao()
+		check = userDao.check(username, password, cur)
+
+		if check:
+			# url_for('function_name')
+			return redirect(url_for('index_with_email', userEmail=username))
+		else:
+			return "Log in Failed"
 	return render_template('login.html', title='Sign In', form=form)
 
 @app.route('/logout')

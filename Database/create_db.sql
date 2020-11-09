@@ -10,9 +10,9 @@ DROP TABLE IF EXISTS class_post_assoc CASCADE;
 
 CREATE TABLE my_user (
 	id VARCHAR(65),
-	my_username VARCHAR(15) DEFAULT NULL,
-	password VARCHAR(50) DEFAULT NULL,
-	salt VARCHAR(15) DEFAULT NULL,
+	my_username VARCHAR(30) DEFAULT NULL,
+	password VARCHAR(65) DEFAULT NULL,
+	salt VARCHAR(65) DEFAULT NULL,
 
 	PRIMARY KEY (id),
 	UNIQUE (my_username)

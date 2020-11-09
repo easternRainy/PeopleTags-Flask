@@ -4,13 +4,18 @@ import time
 import binascii
 from Security.security_config import *
 
+
+def generate_salt():
+    salt = str(np.random.rand())
+    return salt
+
 def generate_id():
     '''
     generate userId, groupId, personId,...
     :return: str
     '''
     time_stamp = str(time.time()).encode(encode_method)
-    salt = str(np.random.rand()).encode(encode_method)
+    salt = generate_salt().encode(encode_method)
     m = hashlib.sha256()
     m.update(time_stamp)
     m.update(salt)
@@ -20,7 +25,7 @@ def generate_id():
 
     return m.hexdigest()
 
-def hash_password(password, salt, n):
+def hash_password(password, salt, n=hash_times):
     '''
     to securely save users' passwords, we need to hash them for n times
     :param password: the password to be hashed and saved
@@ -40,7 +45,7 @@ def hash_password(password, salt, n):
 
     return tmp.hex()
 
-def verify_password(password, salt, n, hash):
+def verify_password(password, salt, hash, n=hash_times):
     '''
     verify if password is right
     hashing password with salt for n times, check if the hash maches
