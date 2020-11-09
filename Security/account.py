@@ -1,8 +1,8 @@
 import hashlib
 import numpy as np
 import time
-#from Security.security_config import *
-encode_method='latin-1'
+import binascii
+from Security.security_config import *
 
 def generate_id():
     '''
@@ -52,3 +52,25 @@ def verify_password(password, salt, n, hash):
     '''
     password_hash = hash_password(password, salt, n)
     return password_hash == hash
+
+
+def update_hash_times(old_password_hash, new_n, old_n):
+    '''
+    for update hash times
+    update the password hash from old_n times, to new_n times
+
+    :return: new hash
+    '''
+
+    assert new_n > old_n
+    diff = new_n - old_n
+
+    tmp = bytearray.fromhex(old_password_hash)
+    for i in range(diff):
+        m = hashlib.sha256()
+        m.update(tmp)
+        tmp = m.digest()
+
+    return tmp.hex()
+
+

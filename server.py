@@ -57,29 +57,39 @@ def logout():
 
 @app.route("/listPersons")
 def list_persons():
-	
+	personDao = PersonDao()
+	records = personDao.list_by_user(cur)
+	persons = personDao.entities_to_objects(records)
 	return render_template("list_persons.html", persons=persons)
 
 @app.route("/listGroups")
 def list_groups():
-
+	groupDao = GroupDao()
+	records = groupDao.list_by_user(cur)
+	groups = groupDao.entities_to_objects(records)
 	return render_template("list_groups.html", groups=groups)
 
 
 @app.route("/listPosts")
 def list_posts():
-
+	postDao = PostDao()
+	records = postDao.list_by_user(cur)
+	posts = postDao.entities_to_objects(records)
 	return render_template("list_posts.html", posts=posts)
 
 @app.route("/viewPerson")
 def view_person():
-	
-	return render_template("view_person.html", person=persons[0], groups=groups, posts=posts, socialMedias=socialMedias)
+	id = request.args.get('id')
+	personDao = PersonDao()
+	person = personDao.select_by_id(cur, id)
+	return render_template("view_person.html", person=person, groups=groups, posts=posts, socialMedias=socialMedias)
 
 @app.route("/viewGroup")
 def view_group():
-
-	return render_template("view_group.html", group=groups[0], personsInGroup=persons, postsOfGroup=posts)
+	id = request.args.get('id')
+	groupDao = GroupDao()
+	group = groupDao.select_by_id(cur, id)
+	return render_template("view_group.html", group=group, personsInGroup=persons, postsOfGroup=posts)
 
 @app.route("/viewPost")
 def view_post():

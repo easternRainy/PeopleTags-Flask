@@ -1,4 +1,4 @@
-from Security.utils import generate_id
+from Security.account import *
 from Forms.entity import *
 
 class Person:
@@ -65,18 +65,18 @@ def GroupForm_to_Group(form):
 
 
 class Post:
-    def __init__(self, name, description, id=None):
+    def __init__(self, post, visibility, id=None):
         if id is None:
             self.id = generate_id()
         else:
             self.id = id
-        self.name = name
-        self.description = description
+        self.post = post
+        self.visibility = visibility
         self.created_by = "NULL"
         self.image_url = "NULL"
 
     def to_str(self):
-        return f"'{self.id}', '{self.name}', '{self.description}', {self.created_by}, {self.image_url}"
+        return f"'{self.id}', '{self.post}', '{self.visibility}', {self.created_by}, {self.image_url}"
 
 
 def PostForm_to_Post(form):
@@ -85,10 +85,9 @@ def PostForm_to_Post(form):
     :param form: GroupFrom
     :return: Group
     '''
-    name = form.description.data
-    description = form.description.data
+    post = form.post.data
+    visibility = form.visibility.data
 
-    group = Group(name, description)
-    return group
-
+    post = Post(post, visibility)
+    return post
 
