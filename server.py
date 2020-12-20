@@ -1,9 +1,10 @@
 
 from flask import Flask, render_template, flash, redirect, url_for
 from flask import request
+from flask import session
 
 import sys
-from Test.test_ui import *
+# from Test.test_ui import *
 from config import Config
 
 from Database.connection import *
@@ -28,11 +29,14 @@ print("Server start.")
 @app.route("/")
 @app.route('/listGlobalPosts')
 def index():
-    return render_template("list_global_posts.html", posts=posts)
+	postDao = PostDao()
+	public_posts = postDao.select_public(cur)
+	return render_template("list_global_posts.html", posts=public_posts)
+
 
 @app.route('/listGlobalPosts/<userEmail>')
 def index_with_email(userEmail):
-	return render_template("list_global_posts.html", posts=posts, userEmail=userEmail)
+	return render_template("list_global_posts.html", posts=public_posts, userEmail=userEmail)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -58,6 +62,7 @@ def login():
 
 		if check:
 			# url_for('function_name')
+			session['USERNAME'] = username
 			return redirect(url_for('index_with_email', userEmail=username))
 		else:
 			return "Log in Failed"
@@ -65,6 +70,7 @@ def login():
 
 @app.route('/logout')
 def logout():
+	session['USERNAME'] = None
 	return render_template("list_global_posts.html", posts=posts)
 
 @app.route("/listPersons")
@@ -105,8 +111,10 @@ def view_group():
 
 @app.route("/viewPost")
 def view_post():
-
-	return render_template("view_post.html", post=posts[0], personsWithPost=persons, groupsWithPost=groups)
+	id = request.args.get('id')
+	postDao = PostDao()
+	post = postDao.select_by_id(cur, id)
+	return render_template("view_post.html", post=post, personsWithPost=None, groupsWithPost=None)
 
 @app.route("/addPerson", methods=['GET', 'POST'])
 def add_person():

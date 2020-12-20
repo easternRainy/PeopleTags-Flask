@@ -100,4 +100,11 @@ class PostDao:
         record = records[0]
         return self.entity_to_object(record)
 
+    def select_public(self, cur):
+        command = f"""SELECT * FROM post WHERE visibility = 'True'"""
+        cur.execute(command)
+        records = cur.fetchall()
+        public_posts = self.entities_to_objects(records)
+        return public_posts
+
 
