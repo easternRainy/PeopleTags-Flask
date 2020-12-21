@@ -17,6 +17,8 @@ from Forms.entity import *
 from Objects.entity import *
 from Objects.account import *
 
+from test_ui import *
+
 # --------pre calculation-----------
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -31,12 +33,7 @@ print("Server start.")
 def index():
 	postDao = PostDao()
 	public_posts = postDao.select_public(cur)
-	return render_template("list_global_posts.html", posts=public_posts)
-
-
-@app.route('/listGlobalPosts/<userEmail>')
-def index_with_email(userEmail):
-	return render_template("list_global_posts.html", posts=public_posts, userEmail=userEmail)
+	return render_template("list_global_posts.html", posts=public_posts, userEmail=session['USERNAME'])
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -63,7 +60,7 @@ def login():
 		if check:
 			# url_for('function_name')
 			session['USERNAME'] = username
-			return redirect(url_for('index_with_email', userEmail=username))
+			return redirect(url_for('index'))
 		else:
 			return "Log in Failed"
 	return render_template('login.html', title='Sign In', form=form)
@@ -78,14 +75,14 @@ def list_persons():
 	personDao = PersonDao()
 	records = personDao.list_by_user(cur)
 	persons = personDao.entities_to_objects(records)
-	return render_template("list_persons.html", persons=persons)
+	return render_template("list_persons.html", persons=persons, userEmail=session['USERNAME'])
 
 @app.route("/listGroups")
 def list_groups():
 	groupDao = GroupDao()
 	records = groupDao.list_by_user(cur)
 	groups = groupDao.entities_to_objects(records)
-	return render_template("list_groups.html", groups=groups)
+	return render_template("list_groups.html", groups=groups, userEmail=session['USERNAME'])
 
 
 @app.route("/listPosts")
@@ -93,28 +90,28 @@ def list_posts():
 	postDao = PostDao()
 	records = postDao.list_by_user(cur)
 	posts = postDao.entities_to_objects(records)
-	return render_template("list_posts.html", posts=posts)
+	return render_template("list_posts.html", posts=posts, userEmail=session['USERNAME'])
 
 @app.route("/viewPerson")
 def view_person():
 	id = request.args.get('id')
 	personDao = PersonDao()
 	person = personDao.select_by_id(cur, id)
-	return render_template("view_person.html", person=person, groups=groups, posts=posts, socialMedias=socialMedias)
+	return render_template("view_person.html", person=person, groups=groups, posts=posts, userEmail=session['USERNAME'])
 
 @app.route("/viewGroup")
 def view_group():
 	id = request.args.get('id')
 	groupDao = GroupDao()
 	group = groupDao.select_by_id(cur, id)
-	return render_template("view_group.html", group=group, personsInGroup=persons, postsOfGroup=posts)
+	return render_template("view_group.html", group=group, personsInGroup=persons, postsOfGroup=posts, userEmail=session['USERNAME'])
 
 @app.route("/viewPost")
 def view_post():
 	id = request.args.get('id')
 	postDao = PostDao()
 	post = postDao.select_by_id(cur, id)
-	return render_template("view_post.html", post=post, personsWithPost=None, groupsWithPost=None)
+	return render_template("view_post.html", post=post, personsWithPost=None, groupsWithPost=None, userEmail=session['USERNAME'])
 
 @app.route("/addPerson", methods=['GET', 'POST'])
 def add_person():
@@ -125,7 +122,7 @@ def add_person():
 		personDao.to_db(new_person, conn, cur)
 
 		return redirect(url_for('list_persons'))
-	return render_template('add_person.html', title='Add Person', form=form)
+	return render_template('add_person.html', title='Add Person', form=form, userEmail=session['USERNAME'])
 
 
 @app.route("/addGroup", methods=['GET', 'POST'])
@@ -137,7 +134,7 @@ def add_group():
 		groupDao.to_db(new_group, conn, cur)
 
 		return redirect(url_for('list_groups'))
-	return render_template('add_group.html', title='Add Group', form=form)
+	return render_template('add_group.html', title='Add Group', form=form, userEmail=session['USERNAME'])
 
 @app.route("/addPost", methods=['GET', 'POST'])
 def add_post():
@@ -148,7 +145,7 @@ def add_post():
 		postDao.to_db(new_post, conn, cur)
 
 		return redirect(url_for('list_posts'))
-	return render_template('add_post.html', title='Add Post', form=form)
+	return render_template('add_post.html', title='Add Post', form=form, userEmail=session['USERNAME'])
 
 @app.route("/addSocialMedia", methods=['GET', 'POST'])
 def add_social_media():
@@ -158,7 +155,7 @@ def add_social_media():
 	if form.validate_on_submit():
 
 		return redirect(url_for('view_person'))
-	return render_template('add_social_media.html', title='Add Social Media', form=form)
+	return render_template('add_social_media.html', title='Add Social Media', form=form, userEmail=session['USERNAME'])
 
 
 
