@@ -22,3 +22,16 @@ class UserDao:
 
             return check
 
+    def check_exist(self, username, cur):
+        command = f"""SELECT my_username FROM my_user WHERE my_username='{username}'"""
+        cur.execute(command)
+        records = cur.fetchall()
+
+        return len(records) > 0;
+
+    def get_user_id(self, username, cur):
+        command = f"""SELECT id FROM my_user WHERE my_username = '{username}'"""
+        cur.execute(command)
+        records = cur.fetchall()
+
+        return records[0][0]

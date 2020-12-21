@@ -9,14 +9,14 @@ class PersonDao:
 
     def entity_to_object(self, record):
         id, first_name, last_name, age, job_title,description,email, created_by, image_url = record
-        person = Person(first_name, last_name, age, job_title, description, email, id=id)
+        person = Person(first_name, last_name, age, job_title, description, email, created_by, id=id)
         return person
 
     def entities_to_objects(self, records):
         return [self.entity_to_object(record) for record in records]
 
-    def list_by_user(self, cur):
-        command = f"""SELECT * FROM person"""
+    def list_by_user(self, cur, id):
+        command = f"""SELECT * FROM person WHERE created_by = '{id}'"""
         cur.execute(command)
         records = cur.fetchall()
         return records
@@ -30,6 +30,12 @@ class PersonDao:
         record = records[0]
         return self.entity_to_object(record)
 
+    def delete(self, id, cur, conn):
+        command = f"""DELETE FROM person WHERE id = '{id}'"""
+        print(command)
+        cur.execute(command)
+        conn.commit()
+
 class GroupDao:
 
     def to_db(self, group, conn, cur):
@@ -41,16 +47,17 @@ class GroupDao:
         id = record[0]
         name = record[1]
         description = record[2]
+        created_by = record[3]
 
-        group = Group(name, description, id=id)
+        group = Group(name, description, created_by, id=id)
 
         return group
 
     def entities_to_objects(self, records):
         return [self.entity_to_object(record) for record in records]
 
-    def list_by_user(self, cur):
-        command = f"""SELECT * FROM class"""
+    def list_by_user(self, cur, id):
+        command = f"""SELECT * FROM class WHERE created_by = '{id}'"""
         cur.execute(command)
         records = cur.fetchall()
         return records
@@ -77,16 +84,18 @@ class PostDao:
         id = record[0]
         post_content = record[1]
         visibility = record[2]
+        create_time = record[3]
+        created_by = record[4]
 
-        post = Post(post_content, visibility, id=id)
+        post = Post(post_content, visibility, create_time, created_by, id=id)
 
         return post
 
     def entities_to_objects(self, records):
         return [self.entity_to_object(record) for record in records]
 
-    def list_by_user(self, cur):
-        command = f"""SELECT * FROM post"""
+    def list_by_user(self, cur, id):
+        command = f"""SELECT * FROM post WHERE created_by = '{id}'"""
         cur.execute(command)
         records = cur.fetchall()
         return records

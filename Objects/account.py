@@ -21,6 +21,11 @@ class User:
 
         return f"'{self.id}', '{self.username}', '{self.password}', '{self.salt}'"
 
+    def get_username(self):
+        return self.username
+
+    def get_id(self):
+        return self.id
 
 def RegisterForm_to_User(form):
     '''
