@@ -17,6 +17,8 @@ from Forms.entity import *
 from Objects.entity import *
 from Objects.account import *
 
+from Database.association import *
+
 from test_ui import *
 
 # --------pre calculation-----------
@@ -33,7 +35,11 @@ print("Server start.")
 def index():
 	postDao = PostDao()
 	public_posts = postDao.select_public(cur)
-	return render_template("list_global_posts.html", posts=public_posts, userEmail=session['USERNAME'])
+	if "USERNAME" in session:
+		useremail = session['USERNAME']
+	else:
+		useremail = None
+	return render_template("list_global_posts.html", posts=public_posts, userEmail=useremail)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -111,7 +117,9 @@ def view_group():
 	id = request.args.get('id')
 	groupDao = GroupDao()
 	group = groupDao.select_by_id(cur, id)
-	return render_template("view_group.html", group=group, personsInGroup=persons, postsOfGroup=posts, userEmail=session['USERNAME'])
+	person_group_dao = PersonGroupDao(conn, cur)
+	persons_in_group = person_group_dao.get_persons_in_group(cur, id, session['USERID'])
+	return render_template("view_group.html", group=group, personsInGroup=persons_in_group, postsOfGroup=posts, userEmail=session['USERNAME'])
 
 @app.route("/viewPost")
 def view_post():
@@ -171,3 +179,36 @@ def delete_person():
 	personDao = PersonDao()
 	personDao.delete(person_id, cur, conn)
 	return redirect(url_for("list_persons"))
+
+
+@app.route("/deleteGroup")
+def delete_group():
+	group_id = request.args.get("id")
+	groupDao = GroupDao()
+	groupDao.delete(group_id, cur, conn)
+	return redirect(url_for("list_groups"))
+
+@app.route("/deletePost")
+def delete_post():
+	post_id = request.args.get("id")
+	postDao = PostDao()
+	postDao.delete(post_id, cur, conn)
+	return redirect(url_for("list_posts"))
+
+@app.route("/addPersonToGroup/list")
+def list_persons_not_in_group():
+	group_id = request.args.get("id")
+	user_id = session['USERID']
+	person_group_dao = PersonGroupDao(conn, cur)
+	persons_not_in_group = person_group_dao.get_persons_not_in_group(group_id, user_id)
+
+	return render_template("choose_person.html", persons=persons_not_in_group, group_id=group_id, userEmail=session['USERNAME'])
+
+@app.route("/addPersonToGroup")
+def add_person_to_group():
+	person_id = request.args.get("id")
+	group_id = request.args.get("groupId")
+	person_group_dao = PersonGroupDao(conn, cur)
+	person_group_dao.add_assoc(person_id, group_id, session['USERID'])
+
+	return redirect(url_for('list_groups'))
