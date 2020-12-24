@@ -212,3 +212,21 @@ def add_person_to_group():
 	person_group_dao.add_assoc(person_id, group_id, session['USERID'])
 
 	return redirect(url_for('list_groups'))
+
+@app.route("/tagPersonWithPost/list")
+def list_persons_not_in_post():
+	post_id = request.args.get("id")
+	user_id = session['USERID']
+	person_post_dao = PersonPostDao(conn, cur)
+	persons_not_in_post = person_post_dao.get_persons_not_in_post(post_id, user_id)
+
+	return render_template("choose_person.html", persons=persons_not_in_post, post_id=post_id, userEmail=session['USERNAME'])
+
+@app.route("/tagPersonWithPost")
+def add_person_to_post():
+	person_id = request.args.get("id")
+	post_id = request.args.get("postId")
+	person_post_dao = PersonPostDao(conn, cur)
+	person_post_dao.add_assoc(person_id, post_id, session['USERID'])
+
+	return redirect(url_for('list_posts'))

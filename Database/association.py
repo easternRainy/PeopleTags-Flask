@@ -76,4 +76,39 @@ class PersonGroupDao(AssocDao):
         return self.get_A_not_in_B(id, user_id)
 
 
+class PersonPostDao(AssocDao):
+
+    def __init__(self, conn, cur):
+        super().__init__(conn, cur)
+        self.daoA = PersonDao(conn, cur)
+        self.daoB = PostDao(conn, cur)
+        self.tableA = "person"
+        self.tableB = "post"
+        self.assoc_table = "person_post_assoc"
+
+    def get_persons_in_post(self, id, user_id):
+        return self.get_A_in_B(id, user_id)
+
+
+    def get_persons_not_in_post(self, id, user_id):
+        return self.get_A_not_in_B(id, user_id)
+
+
+class GroupPostDao(AssocDao):
+
+    def __init__(self, conn, cur):
+        super().__init__(conn, cur)
+        self.daoA = GroupDao(conn, cur)
+        self.daoB = PostDao(conn, cur)
+        self.tableA = "class"
+        self.tableB = "post"
+        self.assoc_table = "class_post_assoc"
+
+    def get_groups_in_post(self, id, user_id):
+        return self.get_A_in_B(id, user_id)
+
+
+    def get_groups_not_in_post(self, id, user_id):
+        return self.get_A_not_in_B(id, user_id)
+
 
