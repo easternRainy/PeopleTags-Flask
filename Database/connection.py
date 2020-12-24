@@ -7,6 +7,7 @@ def connect_db(host=host, port=port, database=database, user=user):
     try:
 
        conn = psycopg2.connect(host=host, port=port, database=database, user=user)
+       conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_REPEATABLE_READ)
        cur = conn.cursor()
        return conn, cur
 
