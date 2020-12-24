@@ -19,7 +19,7 @@ from Objects.account import *
 
 from Database.association import *
 
-from test_ui import *
+# from test_ui import *
 
 # --------pre calculation-----------
 app = Flask(__name__)
@@ -81,7 +81,7 @@ def login():
 def logout():
 	session['USERNAME'] = None
 	session['USERID'] = None
-	return render_template("list_global_posts.html", posts=posts)
+	return redirect(url_for("index"))
 
 @app.route("/listPersons")
 def list_persons():
@@ -116,7 +116,10 @@ def view_person():
 
 	person_post_dao = PersonPostDao(conn, cur)
 	posts = person_post_dao.get_posts_by_person(id, user_id)
-	return render_template("view_person.html", person=person, groups=groups, posts=posts, userEmail=session['USERNAME'])
+
+	person_social_media_dao = PersonSocialMediaDao(conn, cur)
+	social_medias = person_social_media_dao.get_social_medias_by_person(id, user_id)
+	return render_template("view_person.html", person=person, groups=groups, posts=posts, socialMedias=social_medias, userEmail=session['USERNAME'])
 
 @app.route("/viewGroup")
 def view_group():
@@ -155,6 +158,28 @@ def add_person():
 	return render_template('add_person.html', title='Add Person', form=form, userEmail=session['USERNAME'])
 
 
+
+@app.route("/updatePerson", methods=['GET', 'POST'])
+def update_person():
+
+	id = request.args.get("id")
+	person_dao = PersonDao(conn, cur)
+
+	if request.method == 'GET':
+		old_person = person_dao.select_by_id(id)
+		form = old_person.to_form()
+		return render_template('add_person.html', title='Add Person', form=form, userEmail=session['USERNAME'])
+	else:
+		form = PersonForm()
+		user_id = session['USERID']
+		if form.validate_on_submit():
+			new_person = PersonFrom_to_Person(form, user_id, id=id
+											  )
+			person_dao.update(id, new_person)
+			return redirect(url_for("view_person", id=id))
+		return "Update Person Failed"
+
+
 @app.route("/addGroup", methods=['GET', 'POST'])
 def add_group():
 	form = GroupForm()
@@ -165,6 +190,27 @@ def add_group():
 
 		return redirect(url_for('list_groups'))
 	return render_template('add_group.html', title='Add Group', form=form, userEmail=session['USERNAME'])
+
+
+@app.route("/updateGroup", methods=['GET', 'POST'])
+def update_group():
+
+	id = request.args.get("id")
+	group_dao = GroupDao(conn, cur)
+
+	if request.method == 'GET':
+		old_group = group_dao.select_by_id(id)
+		form = old_group.to_form()
+		return render_template('add_group.html', title='Add Group', form=form, userEmail=session['USERNAME'])
+	else:
+		form = GroupForm()
+		user_id = session['USERID']
+		if form.validate_on_submit():
+			new_group = GroupForm_to_Group(form, user_id, id=id)
+			group_dao.update(id, new_group)
+			return redirect(url_for("view_group", id=id))
+		return "Update Group Failed"
+
 
 @app.route("/addPost", methods=['GET', 'POST'])
 def add_post():
@@ -183,10 +229,28 @@ def add_social_media():
 
 	form = SocialMediaForm()
 	if form.validate_on_submit():
+		user_id = session['USERID']
+		new_social_media = SocialMediaForm_to_SocialMedia(form, user_id)
+		social_media_dao = SocialMediaDao(conn, cur)
+		social_media_dao.to_db(new_social_media)
 
-		return redirect(url_for('view_person'))
+		person_social_media_dao = PersonSocialMediaDao(conn, cur)
+		person_social_media_dao.add_assoc(person_id, new_social_media.get_id(), user_id)
+
+		return redirect(url_for('view_person', id=person_id))
 	return render_template('add_social_media.html', title='Add Social Media', form=form, userEmail=session['USERNAME'])
 
+
+@app.route("/deleteSocialMedia")
+def delete_social_media():
+	person_id = request.args.get("personId")
+	social_media_id = request.args.get("socialMediaId")
+	user_id = session['USERID']
+	social_media_dao = SocialMediaDao(conn, cur)
+	social_media_dao.delete(social_media_id)
+	person_social_media_dao = PersonSocialMediaDao(conn, cur)
+	person_social_media_dao.delete_assoc(person_id, social_media_id, user_id)
+	return redirect(url_for("view_person", id=person_id))
 
 @app.route("/deletePerson")
 def delete_person():
@@ -291,3 +355,4 @@ def delete_group_from_post():
 	group_post_dao = GroupPostDao(conn, cur)
 	group_post_dao.delete_assoc(group_id, post_id, user_id)
 	return redirect(url_for("view_post", id=post_id))
+

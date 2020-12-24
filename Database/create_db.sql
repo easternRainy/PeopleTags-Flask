@@ -10,7 +10,7 @@ DROP TABLE IF EXISTS class_post_assoc CASCADE;
 
 CREATE TABLE my_user (
 	id VARCHAR(65),
-	my_username VARCHAR(30) DEFAULT NULL,
+	my_username VARCHAR(65) DEFAULT NULL,
 	password VARCHAR(65) DEFAULT NULL,
 	salt VARCHAR(65) DEFAULT NULL,
 
@@ -20,15 +20,15 @@ CREATE TABLE my_user (
 
 CREATE TABLE person (
 	id VARCHAR(65),
-	first_name VARCHAR(15) DEFAULT NULL,
-	last_name VARCHAR(15) DEFAULT NULL,
+	first_name TEXT DEFAULT NULL,
+	last_name TEXT DEFAULT NULL,
 	age INTEGER DEFAULT NULL,
-	job_title VARCHAR(15) DEFAULT NULL,
-	description VARCHAR(50) DEFAULT NULL,
-	email VARCHAR(20) DEFAULT NULL,
+	job_title TEXT DEFAULT NULL,
+	description TEXT DEFAULT NULL,
+	email TEXT DEFAULT NULL,
 
 	created_by VARCHAR(65),
-	image_url VARCHAR(50) DEFAULT NULL,
+	image_url TEXT DEFAULT NULL,
 
 	PRIMARY KEY (id),
 	FOREIGN KEY(created_by) references my_user (id) ON UPDATE CASCADE ON DELETE CASCADE
@@ -38,10 +38,10 @@ CREATE TABLE person (
 CREATE TABLE class (
 	id VARCHAR(65),
 	name VARCHAR(15) DEFAULT NULL,
-	description VARCHAR(50) DEFAULT NULL,
+	description TEXT DEFAULT NULL,
 
 	created_by VARCHAR(65),
-	image_url VARCHAR(50) DEFAULT NULL,
+	image_url TEXT DEFAULT NULL,
 
 	PRIMARY KEY (id),
 	FOREIGN KEY(created_by) references my_user (id) ON UPDATE CASCADE ON DELETE CASCADE
@@ -51,8 +51,8 @@ CREATE TABLE class (
 CREATE TABLE social_media (
 
 	id VARCHAR(65),
-	name VARCHAR(15) DEFAULT NULL,	
-	url VARCHAR(50) DEFAULT NULL,
+	name TEXT DEFAULT NULL,	
+	url TEXT DEFAULT NULL,
 
 	created_by VARCHAR(65),
 
@@ -63,8 +63,8 @@ CREATE TABLE social_media (
 CREATE TABLE post (
 	id VARCHAR(65),
 
-	file_url VARCHAR(50),
-	visibility VARCHAR(10),
+	file_url TEXT,
+	visibility TEXT,
 	create_time DATE,
 	created_by VARCHAR(65),
 	PRIMARY KEY (id),
