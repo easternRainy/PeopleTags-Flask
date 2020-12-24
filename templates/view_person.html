@@ -19,14 +19,12 @@
 		          <img class="person-image" height="100" src="https://image.flaticon.com/icons/svg/747/747545.svg">
 		        </div>
 		        <div class="media-body">
-		          <h4 class="person-first">{{person.first_name}}</h4>
-		          <h5 class="person-last">{{person.last_name}}</h5>
+		          <h4 class="person-first">{{person.first_name}} {{person.last_name}}</h4>
 		          <h5 class="person-email">Email Address : <a href="mailto:{{person.email}}">{{person.email}}</a></h5>
-		          <h5 class="person-age">{{person.age}}</h5>
-		          <h5 class="person-jobTitle">{{person.job_title}}</h5>
-		          <h5 class="person-description">{{person.description}}</h5>
-		          <small class="person-added-by">Added by
-		            {{person.created_by}}</small>
+		          <h5 class="person-age">Age: {{person.age}}</h5>
+		          <h5 class="person-jobTitle">Job Title: {{person.job_title}}</h5>
+		          <h5 class="person-description">Description: {{person.description}}</h5>
+
 		        </div>
 		    </div><br>
 
@@ -52,7 +50,7 @@
 		                            </a>
 		                        </div>
 		                        <div class="container">
-		                            <p>{{socialMedia.socialMediaName}} : <a href={{socialMedia.socialMediaLink}}>{{socialMedia.socialMediaLink}}</a></p>
+		                            <p>{{socialMedia.social_media_name}} : <a href={{socialMedia.socialMediaLink}}>{{socialMedia.link}}</a></p>
 		                        </div>
 		                    </div><br>
 		                {% endfor %}

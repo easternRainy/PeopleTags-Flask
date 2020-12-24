@@ -27,10 +27,9 @@
                   {% endif %}
               {% endfor %}
           </div>
-          <p class="post-time">{{post.createdTime}}</p>
-          <p class="post-visibility">{{post.visibility}}</p>
-          <small class="post-added-by">Added by
-            {{post.createdBy}}</small>
+          <p class="post-time">{{post.create_time}}</p>
+          <p class="post-visibility">Public: {{post.visibility}}</p>
+
         </div>
     </div>
 

@@ -146,3 +146,15 @@ class GroupPostDao(AssocDao):
         return self.get_A_not_in_B(id, user_id)
 
 
+class PersonSocialMediaDao(AssocDao):
+
+    def __init__(self, conn, cur):
+        super().__init__(conn, cur)
+        self.daoA = PersonDao(conn, cur)
+        self.daoB = SocialMediaDao(conn, cur)
+        self.tableA = "person"
+        self.tableB = "social_media"
+        self.assoc_table = "person_social_media_assoc"
+
+    def get_social_medias_by_person(self, id, user_id):
+        return self.get_B_in_A(id, user_id)

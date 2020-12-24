@@ -24,8 +24,7 @@
             {{group.name}}
           </h4>
           <p class="group-description">{{group.description}}</p>
-          <small class="group-added-by">Added by
-            {{group.createdBy}}</small>
+
         </div>
     </div>
 
@@ -58,7 +57,7 @@
                           <p>{{person.description}}</p>
                         </div><br>
                         <div class="btn-group">
-                            <a href="/deletepersonfromgroup?groupId={{group.id}}&personId={{person.id}}" class="btn btn-danger btn-sm">
+                            <a href="/deletePersonFromGroup?groupId={{group.id}}&personId={{person.id}}" class="btn btn-danger btn-sm">
                                 <i class="glyphicon glyphicon-trash"></i>
                                 Delete Person
                             </a>

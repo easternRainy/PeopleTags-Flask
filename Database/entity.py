@@ -91,5 +91,18 @@ class PostDao(SingleDao):
         public_posts = self.entities_to_objects(records)
         return public_posts
 
+class SocialMediaDao(SingleDao):
+
+    def __init__(self, conn, cur):
+        super().__init__(conn, cur)
+        self.table = "social_media"
+
+    def entity_to_object(self, record):
+        id = record[0]
+        name = record[1]
+        url = record[2]
+        created_by = record[3]
+        social_media = SocialMedia(name, url, created_by, id=id)
+        return social_media
 
 

@@ -20,8 +20,8 @@ def generate_id():
     m.update(time_stamp)
     m.update(salt)
 
-    print(m.hexdigest())
-    print(m.digest().hex() == m.hexdigest())
+    # print(m.hexdigest())
+    # print(m.digest().hex() == m.hexdigest())
 
     return m.hexdigest()
 
