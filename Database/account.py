@@ -2,13 +2,18 @@ from Objects.account import *
 from Security.account import *
 
 class UserDao:
+    def __init__(self, conn, cur):
+        self.table = "my_user"
+        self.conn = conn
+        self.cur = cur
+
     def to_db(self, user, conn, cur):
-        command = f"""INSERT INTO my_user VALUES ({user.to_str()})"""
+        command = f"""INSERT INTO {self.table} VALUES ({user.to_str()})"""
         cur.execute(command)
         conn.commit()
 
     def check(self, username, password, cur):
-        command = f"""SELECT * FROM my_user WHERE my_username='{username}'"""
+        command = f"""SELECT * FROM {self.table} WHERE my_username='{username}'"""
         cur.execute(command)
         records = cur.fetchall()
         if len(records) != 1:
@@ -23,14 +28,14 @@ class UserDao:
             return check
 
     def check_exist(self, username, cur):
-        command = f"""SELECT my_username FROM my_user WHERE my_username='{username}'"""
+        command = f"""SELECT my_username FROM {self.table} WHERE my_username='{username}'"""
         cur.execute(command)
         records = cur.fetchall()
 
         return len(records) > 0;
 
     def get_user_id(self, username, cur):
-        command = f"""SELECT id FROM my_user WHERE my_username = '{username}'"""
+        command = f"""SELECT id FROM {self.table} WHERE my_username = '{username}'"""
         cur.execute(command)
         records = cur.fetchall()
 

@@ -52,6 +52,7 @@ class AssocDao:
     def add_assoc(self, A_id, B_id, user_id):
         assoc_id = generate_id()
         command = f"""INSERT INTO {self.assoc_table} VALUES ('{assoc_id}', '{A_id}', '{B_id}', '{user_id}')"""
+        # print(command)
         self.cur.execute(command)
         self.conn.commit()
 

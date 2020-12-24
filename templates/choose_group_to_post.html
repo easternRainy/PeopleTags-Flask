@@ -1,0 +1,40 @@
+{% extends "header.html" %}
+
+{% block content %}
+<div class="container">
+
+<!-- [START list persons] -->
+  <h3>Choose Persons</h3>
+        {% if groups %}
+            {% for group in groups %}
+            <div>
+                <div class="media">
+                    <a href="/viewGroup?id={{ group.id }}">
+                      <div class="media-left">
+                        <img alt="ahhh" height="200"src='https://image.flaticon.com/icons/svg/872/872186.svg'>
+                      </div>
+                      <div class="media-body">
+                        <h4>{{group.name}}</h4>
+                        <p>{{group.description}}</p>
+                      </div>
+                    </a>
+                  </div>
+                <div class="btn-group">
+                      <a href="/tagGroupWithPost?id={{post_id}}&groupId={{group.id}}" class="btn btn-primary btn-sm">
+                          <i class="glyphicon glyphicon-edit"></i>
+                          + Add
+                      </a>
+                </div>
+            </div><br>
+            {% endfor %}
+            {% if groupCursor %}
+                <ul class="pager">
+                    <li><a href="?id=${group_id}&groupCursor=${groupCursor}">More</a></li>
+                </ul>
+            {% endif %}
+        {% else %}
+            <p> No persons found. </p>
+        {% endif %}
+
+</div>
+{% endblock %}

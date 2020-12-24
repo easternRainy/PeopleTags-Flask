@@ -202,7 +202,7 @@ def list_persons_not_in_group():
 	person_group_dao = PersonGroupDao(conn, cur)
 	persons_not_in_group = person_group_dao.get_persons_not_in_group(group_id, user_id)
 
-	return render_template("choose_person.html", persons=persons_not_in_group, group_id=group_id, userEmail=session['USERNAME'])
+	return render_template("choose_person_to_group.html", persons=persons_not_in_group, group_id=group_id, userEmail=session['USERNAME'])
 
 @app.route("/addPersonToGroup")
 def add_person_to_group():
@@ -220,7 +220,7 @@ def list_persons_not_in_post():
 	person_post_dao = PersonPostDao(conn, cur)
 	persons_not_in_post = person_post_dao.get_persons_not_in_post(post_id, user_id)
 
-	return render_template("choose_person.html", persons=persons_not_in_post, post_id=post_id, userEmail=session['USERNAME'])
+	return render_template("choose_person_to_post.html", persons=persons_not_in_post, post_id=post_id, userEmail=session['USERNAME'])
 
 @app.route("/tagPersonWithPost")
 def add_person_to_post():
@@ -228,5 +228,24 @@ def add_person_to_post():
 	post_id = request.args.get("postId")
 	person_post_dao = PersonPostDao(conn, cur)
 	person_post_dao.add_assoc(person_id, post_id, session['USERID'])
+
+	return redirect(url_for('list_posts'))
+
+
+@app.route("/tagGroupWithPost/list")
+def list_groups_not_in_post():
+	post_id = request.args.get("id")
+	user_id = session['USERID']
+	group_post_dao = GroupPostDao(conn, cur)
+	groups_not_in_post = group_post_dao.get_groups_not_in_post(post_id, user_id)
+
+	return render_template("choose_group_to_post.html", groups=groups_not_in_post, post_id=post_id, userEmail=session['USERNAME'])
+
+@app.route("/tagGroupWithPost")
+def add_group_to_post():
+	post_id = request.args.get("id")
+	group_id = request.args.get("groupId")
+	group_post_dao = GroupPostDao(conn, cur)
+	group_post_dao.add_assoc(group_id, post_id, session['USERID'])
 
 	return redirect(url_for('list_posts'))
