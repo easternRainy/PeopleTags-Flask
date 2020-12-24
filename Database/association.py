@@ -75,6 +75,10 @@ class AssocDao:
         self.cur.execute(command)
         self.conn.commit()
 
+    def delete_assoc(self, A_id, B_id, user_id):
+        command = f"""DELETE FROM {self.assoc_table} WHERE {self.tableA} = '{A_id}' AND {self.tableB} = '{B_id}' AND created_by = '{user_id}'"""
+        self.cur.execute(command)
+        self.conn.commit()
 
 class PersonGroupDao(AssocDao):
 

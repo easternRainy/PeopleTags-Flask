@@ -226,7 +226,7 @@ def add_person_to_group():
 	person_group_dao = PersonGroupDao(conn, cur)
 	person_group_dao.add_assoc(person_id, group_id, session['USERID'])
 
-	return redirect(url_for('list_groups'))
+	return redirect(url_for('view_group', id=group_id))
 
 @app.route("/tagPersonWithPost/list")
 def list_persons_not_in_post():
@@ -244,7 +244,7 @@ def add_person_to_post():
 	person_post_dao = PersonPostDao(conn, cur)
 	person_post_dao.add_assoc(person_id, post_id, session['USERID'])
 
-	return redirect(url_for('list_posts'))
+	return redirect(url_for('view_post', id=post_id))
 
 
 @app.route("/tagGroupWithPost/list")
@@ -263,4 +263,31 @@ def add_group_to_post():
 	group_post_dao = GroupPostDao(conn, cur)
 	group_post_dao.add_assoc(group_id, post_id, session['USERID'])
 
-	return redirect(url_for('list_posts'))
+	return redirect(url_for('view_post', id=post_id))
+
+@app.route("/deletePersonFromGroup")
+def delete_person_from_group():
+	person_id = request.args.get("personId")
+	group_id = request.args.get("groupId")
+	user_id = session['USERID']
+	person_group_dao = PersonGroupDao(conn, cur)
+	person_group_dao.delete_assoc(person_id, group_id, user_id)
+	return redirect(url_for("view_group", id=group_id))
+
+@app.route("/deletePersonFromPost")
+def delete_person_from_post():
+	person_id = request.args.get("personId")
+	post_id = request.args.get("postId")
+	user_id = session['USERID']
+	person_post_dao = PersonPostDao(conn, cur)
+	person_post_dao.delete_assoc(person_id, post_id, user_id)
+	return redirect(url_for("view_post", id=post_id))
+
+@app.route("/deleteGroupFromPost")
+def delete_group_from_post():
+	group_id = request.args.get("groupId")
+	post_id = request.args.get("postId")
+	user_id = session['USERID']
+	group_post_dao = GroupPostDao(conn, cur)
+	group_post_dao.delete_assoc(group_id, post_id, user_id)
+	return redirect(url_for("view_post", id=post_id))
