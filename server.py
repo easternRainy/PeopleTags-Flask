@@ -33,8 +33,8 @@ print("Server start.")
 @app.route("/")
 @app.route('/listGlobalPosts')
 def index():
-	postDao = PostDao()
-	public_posts = postDao.select_public(cur)
+	postDao = PostDao(conn, cur)
+	public_posts = postDao.select_public()
 	if "USERNAME" in session:
 		useremail = session['USERNAME']
 	else:
@@ -47,12 +47,12 @@ def register():
 	if form.validate_on_submit():
 		new_user = RegisterForm_to_User(form)
 
-		userDao = UserDao()
+		userDao = UserDao(conn, cur)
 
-		if userDao.check_exist(new_user.get_username(), cur):
+		if userDao.check_exist(new_user.get_username()):
 			return "User already exists"
 		else:
-			userDao.to_db(new_user, conn, cur)
+			userDao.to_db(new_user)
 			session['USERNAME'] = new_user.get_username()
 			session['USERID'] = new_user.get_id()
 			return redirect(url_for('index'))
@@ -65,13 +65,13 @@ def login():
 
 		username = form.username.data
 		password = form.password.data
-		userDao = UserDao()
-		check = userDao.check(username, password, cur)
+		userDao = UserDao(conn, cur)
+		check = userDao.check(username, password)
 
 		if check:
 			# url_for('function_name')
 			session['USERNAME'] = username
-			session['USERID'] = userDao.get_user_id(username, cur)
+			session['USERID'] = userDao.get_user_id(username)
 			return redirect(url_for('index'))
 		else:
 			return redirect(url_for('login'))
@@ -85,47 +85,47 @@ def logout():
 
 @app.route("/listPersons")
 def list_persons():
-	personDao = PersonDao()
-	records = personDao.list_by_user(cur, session['USERID'])
+	personDao = PersonDao(conn, cur)
+	records = personDao.list_by_user(session['USERID'])
 	persons = personDao.entities_to_objects(records)
 	return render_template("list_persons.html", persons=persons, userEmail=session['USERNAME'])
 
 @app.route("/listGroups")
 def list_groups():
-	groupDao = GroupDao()
-	records = groupDao.list_by_user(cur, session['USERID'])
+	groupDao = GroupDao(conn, cur)
+	records = groupDao.list_by_user(session['USERID'])
 	groups = groupDao.entities_to_objects(records)
 	return render_template("list_groups.html", groups=groups, userEmail=session['USERNAME'])
 
 
 @app.route("/listPosts")
 def list_posts():
-	postDao = PostDao()
-	records = postDao.list_by_user(cur, session['USERID'])
+	postDao = PostDao(conn, cur)
+	records = postDao.list_by_user(session['USERID'])
 	posts = postDao.entities_to_objects(records)
 	return render_template("list_posts.html", posts=posts, userEmail=session['USERNAME'])
 
 @app.route("/viewPerson")
 def view_person():
 	id = request.args.get('id')
-	personDao = PersonDao()
-	person = personDao.select_by_id(cur, id)
+	personDao = PersonDao(conn, cur)
+	person = personDao.select_by_id(id)
 	return render_template("view_person.html", person=person, groups=groups, posts=posts, userEmail=session['USERNAME'])
 
 @app.route("/viewGroup")
 def view_group():
 	id = request.args.get('id')
-	groupDao = GroupDao()
-	group = groupDao.select_by_id(cur, id)
+	groupDao = GroupDao(conn, cur)
+	group = groupDao.select_by_id(id)
 	person_group_dao = PersonGroupDao(conn, cur)
-	persons_in_group = person_group_dao.get_persons_in_group(cur, id, session['USERID'])
+	persons_in_group = person_group_dao.get_persons_in_group(id, session['USERID'])
 	return render_template("view_group.html", group=group, personsInGroup=persons_in_group, postsOfGroup=posts, userEmail=session['USERNAME'])
 
 @app.route("/viewPost")
 def view_post():
 	id = request.args.get('id')
-	postDao = PostDao()
-	post = postDao.select_by_id(cur, id)
+	postDao = PostDao(conn, cur)
+	post = postDao.select_by_id(id)
 	return render_template("view_post.html", post=post, personsWithPost=None, groupsWithPost=None, userEmail=session['USERNAME'])
 
 @app.route("/addPerson", methods=['GET', 'POST'])
@@ -133,8 +133,8 @@ def add_person():
 	form = PersonForm()
 	if form.validate_on_submit():
 		new_person = PersonFrom_to_Person(form, session['USERID'])
-		personDao = PersonDao()
-		personDao.to_db(new_person, conn, cur)
+		personDao = PersonDao(conn, cur)
+		personDao.to_db(new_person)
 
 		return redirect(url_for('list_persons'))
 	return render_template('add_person.html', title='Add Person', form=form, userEmail=session['USERNAME'])
@@ -145,8 +145,8 @@ def add_group():
 	form = GroupForm()
 	if form.validate_on_submit():
 		new_group = GroupForm_to_Group(form, session['USERID'])
-		groupDao = GroupDao()
-		groupDao.to_db(new_group, conn, cur)
+		groupDao = GroupDao(conn, cur)
+		groupDao.to_db(new_group)
 
 		return redirect(url_for('list_groups'))
 	return render_template('add_group.html', title='Add Group', form=form, userEmail=session['USERNAME'])
@@ -156,8 +156,8 @@ def add_post():
 	form = PostForm()
 	if form.validate_on_submit():
 		new_post = PostForm_to_Post(form, session['USERID'])
-		postDao = PostDao()
-		postDao.to_db(new_post, conn, cur)
+		postDao = PostDao(conn, cur)
+		postDao.to_db(new_post)
 
 		return redirect(url_for('list_posts'))
 	return render_template('add_post.html', title='Add Post', form=form, userEmail=session['USERNAME'])
@@ -176,23 +176,23 @@ def add_social_media():
 @app.route("/deletePerson")
 def delete_person():
 	person_id = request.args.get("id")
-	personDao = PersonDao()
-	personDao.delete(person_id, cur, conn)
+	personDao = PersonDao(conn, cur)
+	personDao.delete(person_id)
 	return redirect(url_for("list_persons"))
 
 
 @app.route("/deleteGroup")
 def delete_group():
 	group_id = request.args.get("id")
-	groupDao = GroupDao()
-	groupDao.delete(group_id, cur, conn)
+	groupDao = GroupDao(conn, cur)
+	groupDao.delete(group_id)
 	return redirect(url_for("list_groups"))
 
 @app.route("/deletePost")
 def delete_post():
 	post_id = request.args.get("id")
-	postDao = PostDao()
-	postDao.delete(post_id, cur, conn)
+	postDao = PostDao(conn, cur)
+	postDao.delete(post_id)
 	return redirect(url_for("list_posts"))
 
 @app.route("/addPersonToGroup/list")

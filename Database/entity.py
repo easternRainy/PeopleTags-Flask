@@ -1,47 +1,60 @@
 from Objects.entity import *
 
-class PersonDao:
+class SingleDao:
 
-    def to_db(self, person, conn, cur):
-        command = f"""INSERT INTO person VALUES ({person.to_str()})"""
-        cur.execute(command)
-        conn.commit()
+    def __init__(self, conn, cur):
+        self.table = ""
+        self.conn = conn
+        self.cur = cur
+
+    def to_db(self, object):
+        command = f"""INSERT INTO {self.table} VALUES ({object.to_str()})"""
+        self.cur.execute(command)
+        self.conn.commit()
+
+    def entity_to_object(self, record):
+        pass
+
+    def entities_to_objects(self, records):
+        return [self.entity_to_object(record) for record in records]
+
+    def list_by_user(self, user_id):
+        command = f"""SELECT * FROM {self.table} WHERE created_by = '{user_id}'"""
+        self.cur.execute(command)
+        records = self.cur.fetchall()
+        return records
+
+    def select_by_id(self, id):
+        command = f"""SELECT * FROM {self.table} WHERE id='{id}'"""
+        self.cur.execute(command)
+        records = self.cur.fetchall()
+        if len(records) != 1:
+            return None
+        record = records[0]
+        return self.entity_to_object(record)
+
+    def delete(self, id):
+        command = f"""DELETE FROM {self.table} WHERE id = '{id}'"""
+        self.cur.execute(command)
+        self.conn.commit()
+
+class PersonDao(SingleDao):
+
+    def __init__(self, conn, cur):
+        super().__init__(conn, cur)
+        self.table = "person"
 
     def entity_to_object(self, record):
         id, first_name, last_name, age, job_title,description,email, created_by, image_url = record
         person = Person(first_name, last_name, age, job_title, description, email, created_by, id=id)
         return person
 
-    def entities_to_objects(self, records):
-        return [self.entity_to_object(record) for record in records]
 
-    def list_by_user(self, cur, id):
-        command = f"""SELECT * FROM person WHERE created_by = '{id}'"""
-        cur.execute(command)
-        records = cur.fetchall()
-        return records
+class GroupDao(SingleDao):
 
-    def select_by_id(self, cur, id):
-        command = f"""SELECT * FROM person WHERE id='{id}'"""
-        cur.execute(command)
-        records = cur.fetchall()
-        if len(records) != 1:
-            return None
-        record = records[0]
-        return self.entity_to_object(record)
-
-    def delete(self, id, cur, conn):
-        command = f"""DELETE FROM person WHERE id = '{id}'"""
-        print(command)
-        cur.execute(command)
-        conn.commit()
-
-class GroupDao:
-
-    def to_db(self, group, conn, cur):
-        command = f"""INSERT INTO class VALUES ({group.to_str()})"""
-        cur.execute(command)
-        conn.commit()
+    def __init__(self, conn, cur):
+        super().__init__(conn, cur)
+        self.table = "class"
 
     def entity_to_object(self, record):
         id = record[0]
@@ -53,32 +66,12 @@ class GroupDao:
 
         return group
 
-    def entities_to_objects(self, records):
-        return [self.entity_to_object(record) for record in records]
 
-    def list_by_user(self, cur, id):
-        command = f"""SELECT * FROM class WHERE created_by = '{id}'"""
-        cur.execute(command)
-        records = cur.fetchall()
-        return records
+class PostDao(SingleDao):
 
-    def select_by_id(self, cur, id):
-        command = f"""SELECT * FROM class WHERE id='{id}'"""
-        cur.execute(command)
-        records = cur.fetchall()
-        if len(records) != 1:
-            return None
-        record = records[0]
-        return self.entity_to_object(record)
-
-
-
-class PostDao:
-
-    def to_db(self, post, conn, cur):
-        command = f"""INSERT INTO post VALUES ({post.to_str()})"""
-        cur.execute(command)
-        conn.commit()
+    def __init__(self, conn, cur):
+        super().__init__(conn, cur)
+        self.table = "post"
 
     def entity_to_object(self, record):
         id = record[0]
@@ -91,29 +84,12 @@ class PostDao:
 
         return post
 
-    def entities_to_objects(self, records):
-        return [self.entity_to_object(record) for record in records]
-
-    def list_by_user(self, cur, id):
-        command = f"""SELECT * FROM post WHERE created_by = '{id}'"""
-        cur.execute(command)
-        records = cur.fetchall()
-        return records
-
-    def select_by_id(self, cur, id):
-        command = f"""SELECT * FROM post WHERE id='{id}'"""
-        cur.execute(command)
-        records = cur.fetchall()
-        if len(records) != 1:
-            return None
-        record = records[0]
-        return self.entity_to_object(record)
-
-    def select_public(self, cur):
-        command = f"""SELECT * FROM post WHERE visibility = 'True'"""
-        cur.execute(command)
-        records = cur.fetchall()
+    def select_public(self):
+        command = f"""SELECT * FROM {self.table} WHERE visibility = 'True'"""
+        self.cur.execute(command)
+        records = self.cur.fetchall()
         public_posts = self.entities_to_objects(records)
         return public_posts
+
 
 

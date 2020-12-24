@@ -1,55 +1,79 @@
 from Database.entity import *
 from Security.account import *
 
-class PersonGroupDao:
+class AssocDao:
 
     def __init__(self, conn, cur):
         self.conn = conn
         self.cur = cur
-        self.personDao = PersonDao()
-        self.groupDao = GroupDao()
+        self.daoA = None
+        self.daoB = None
+        self.tableA = ""
+        self.tableB = ""
+        self.assoc_table = ""
 
-    def get_persons_in_group(self, cur, id, user_id):
+    def get_A_in_B(self, id, user_id):
         command = f"""
                     SELECT * 
-                    FROM person
+                    FROM {self.tableA}
                     WHERE 
-                        person.created_by = '{user_id}' AND
-
-                        person.id IN (
-                             SELECT DISTINCT person FROM person_class_assoc
-                             WHERE class = '{id}' AND created_by = '{user_id}'
+                        {self.tableA}.created_by = '{user_id}' AND
+    
+                        {self.tableA}.id IN (
+                             SELECT DISTINCT {self.tableA} FROM {self.assoc_table}
+                             WHERE {self.tableB} = '{id}' AND created_by = '{user_id}'
                         )    
                     """
         self.cur.execute(command)
         records = self.cur.fetchall()
-        persons = self.personDao.entities_to_objects(records)
+        A_s = self.daoA.entities_to_objects(records)
 
-        return persons
+        return A_s
 
 
-    def get_persons_not_in_group(self, group_id, user_id):
+    def get_A_not_in_B(self, id, user_id):
         command = f"""
                     SELECT * 
-                    FROM person
+                    FROM {self.tableA}
                     WHERE 
-                        person.created_by = '{user_id}' AND
+                        {self.tableA}.created_by = '{user_id}' AND
 
-                        person.id NOT IN (
-                             SELECT DISTINCT person FROM person_class_assoc
-                             WHERE class = '{group_id}' AND created_by = '{user_id}'
+                        {self.tableA}.id NOT IN (
+                             SELECT DISTINCT {self.tableA} FROM {self.assoc_table}
+                             WHERE {self.tableB} = '{id}' AND created_by = '{user_id}'
                         )    
                     """
         self.cur.execute(command)
         records = self.cur.fetchall()
-        persons = self.personDao.entities_to_objects(records)
+        A_s = self.daoA.entities_to_objects(records)
 
-        return persons
+        return A_s
 
-    def add_assoc(self, person_id, group_id, user_id):
+    def add_assoc(self, A_id, B_id, user_id):
         assoc_id = generate_id()
-        command = f"""INSERT INTO person_class_assoc VALUES ('{assoc_id}', '{person_id}', '{group_id}', '{user_id}')"""
-        # print(command)
+        command = f"""INSERT INTO {self.assoc_table} VALUES ('{assoc_id}', '{A_id}', '{B_id}', '{user_id}')"""
         self.cur.execute(command)
         self.conn.commit()
+
+
+class PersonGroupDao(AssocDao):
+
+    def __init__(self, conn, cur):
+        super().__init__(conn, cur)
+        self.daoA = PersonDao(conn, cur)
+        self.daoB = GroupDao(conn, cur)
+        self.tableA = "person"
+        self.tableB = "class"
+        self.assoc_table = "person_class_assoc"
+
+
+
+    def get_persons_in_group(self, id, user_id):
+        return self.get_A_in_B(id, user_id)
+
+
+    def get_persons_not_in_group(self, id, user_id):
+        return self.get_A_not_in_B(id, user_id)
+
+
 
