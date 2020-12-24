@@ -110,6 +110,12 @@ def view_person():
 	id = request.args.get('id')
 	personDao = PersonDao(conn, cur)
 	person = personDao.select_by_id(id)
+	person_group_dao = PersonGroupDao(conn, cur)
+	user_id = session['USERID']
+	groups = person_group_dao.get_groups_by_person(id, user_id)
+
+	person_post_dao = PersonPostDao(conn, cur)
+	posts = person_post_dao.get_posts_by_person(id, user_id)
 	return render_template("view_person.html", person=person, groups=groups, posts=posts, userEmail=session['USERNAME'])
 
 @app.route("/viewGroup")
@@ -118,15 +124,24 @@ def view_group():
 	groupDao = GroupDao(conn, cur)
 	group = groupDao.select_by_id(id)
 	person_group_dao = PersonGroupDao(conn, cur)
-	persons_in_group = person_group_dao.get_persons_in_group(id, session['USERID'])
-	return render_template("view_group.html", group=group, personsInGroup=persons_in_group, postsOfGroup=posts, userEmail=session['USERNAME'])
+
+	user_id = session['USERID']
+	persons_in_group = person_group_dao.get_persons_in_group(id, user_id)
+
+	group_post_dao = GroupPostDao(conn, cur)
+	posts_of_group = group_post_dao.get_posts_by_group(id, user_id)
+	return render_template("view_group.html", group=group, personsInGroup=persons_in_group, postsOfGroup=posts_of_group, userEmail=session['USERNAME'])
 
 @app.route("/viewPost")
 def view_post():
 	id = request.args.get('id')
 	postDao = PostDao(conn, cur)
 	post = postDao.select_by_id(id)
-	return render_template("view_post.html", post=post, personsWithPost=None, groupsWithPost=None, userEmail=session['USERNAME'])
+
+	user_id = session['USERID']
+	persons = PersonPostDao(conn, cur).get_persons_in_post(id, user_id)
+	groups = GroupPostDao(conn, cur).get_groups_in_post(id, user_id)
+	return render_template("view_post.html", post=post, personsWithPost=persons, groupsWithPost=groups, userEmail=session['USERNAME'])
 
 @app.route("/addPerson", methods=['GET', 'POST'])
 def add_person():

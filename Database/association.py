@@ -30,6 +30,25 @@ class AssocDao:
 
         return A_s
 
+    def get_B_in_A(self, id, user_id):
+        command = f"""
+                    SELECT * 
+                    FROM {self.tableB}
+                    WHERE 
+                        {self.tableB}.created_by = '{user_id}' AND
+
+                        {self.tableB}.id IN (
+                             SELECT DISTINCT {self.tableB} FROM {self.assoc_table}
+                             WHERE {self.tableA} = '{id}' AND created_by = '{user_id}'
+                        )    
+                    """
+        # print(command)
+        self.cur.execute(command)
+        records = self.cur.fetchall()
+        B_s = self.daoB.entities_to_objects(records)
+
+        return B_s
+
 
     def get_A_not_in_B(self, id, user_id):
         command = f"""
@@ -72,9 +91,14 @@ class PersonGroupDao(AssocDao):
     def get_persons_in_group(self, id, user_id):
         return self.get_A_in_B(id, user_id)
 
+    def get_groups_by_person(self, id, user_id):
+        return self.get_B_in_A(id, user_id)
+
 
     def get_persons_not_in_group(self, id, user_id):
         return self.get_A_not_in_B(id, user_id)
+
+
 
 
 class PersonPostDao(AssocDao):
@@ -89,6 +113,9 @@ class PersonPostDao(AssocDao):
 
     def get_persons_in_post(self, id, user_id):
         return self.get_A_in_B(id, user_id)
+
+    def get_posts_by_person(self, id, user_id):
+        return self.get_B_in_A(id, user_id)
 
 
     def get_persons_not_in_post(self, id, user_id):
@@ -108,6 +135,8 @@ class GroupPostDao(AssocDao):
     def get_groups_in_post(self, id, user_id):
         return self.get_A_in_B(id, user_id)
 
+    def get_posts_by_group(self, id, user_id):
+        return self.get_B_in_A(id, user_id)
 
     def get_groups_not_in_post(self, id, user_id):
         return self.get_A_not_in_B(id, user_id)
