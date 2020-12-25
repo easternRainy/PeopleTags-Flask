@@ -25,6 +25,7 @@ from Database.association import *
 app = Flask(__name__)
 app.config.from_object(Config)
 conn, cur = connect_db()
+
 print("Server start.")
 # --------end of pre calculation-----------
 
@@ -86,23 +87,39 @@ def logout():
 @app.route("/listPersons")
 def list_persons():
 	personDao = PersonDao(conn, cur)
-	records = personDao.list_by_user(session['USERID'])
-	persons = personDao.entities_to_objects(records)
+	if "USERID" in session:
+		user_id = session['USERID']
+		records = personDao.list_by_user(user_id)
+		persons = personDao.entities_to_objects(records)
+	else:
+		persons = None
+
 	return render_template("list_persons.html", persons=persons, userEmail=session['USERNAME'])
 
 @app.route("/listGroups")
 def list_groups():
 	groupDao = GroupDao(conn, cur)
-	records = groupDao.list_by_user(session['USERID'])
-	groups = groupDao.entities_to_objects(records)
+	if "USERID" in session:
+		user_id = session['USERID']
+		records = groupDao.list_by_user(user_id)
+		groups = groupDao.entities_to_objects(records)
+	else:
+		groups = None
+
 	return render_template("list_groups.html", groups=groups, userEmail=session['USERNAME'])
 
 
 @app.route("/listPosts")
 def list_posts():
 	postDao = PostDao(conn, cur)
-	records = postDao.list_by_user(session['USERID'])
-	posts = postDao.entities_to_objects(records)
+
+	if "USERID" in session:
+		user_id = session['USERID']
+		records = postDao.list_by_user(user_id)
+		posts = postDao.entities_to_objects(records)
+	else:
+		posts = None
+
 	return render_template("list_posts.html", posts=posts, userEmail=session['USERNAME'])
 
 @app.route("/viewPerson")
@@ -148,6 +165,10 @@ def view_post():
 
 @app.route("/addPerson", methods=['GET', 'POST'])
 def add_person():
+
+	if "USERID" not in session or session["USERID"] is None:
+		return "Please Log In"
+
 	form = PersonForm()
 	if form.validate_on_submit():
 		new_person = PersonFrom_to_Person(form, session['USERID'])
@@ -182,6 +203,10 @@ def update_person():
 
 @app.route("/addGroup", methods=['GET', 'POST'])
 def add_group():
+
+	if "USERID" not in session or session["USERID"] is None:
+		return "Please Log In"
+
 	form = GroupForm()
 	if form.validate_on_submit():
 		new_group = GroupForm_to_Group(form, session['USERID'])
@@ -214,6 +239,9 @@ def update_group():
 
 @app.route("/addPost", methods=['GET', 'POST'])
 def add_post():
+	if "USERID" not in session or session["USERID"] is None:
+		return "Please Log In"
+
 	form = PostForm()
 	if form.validate_on_submit():
 		new_post = PostForm_to_Post(form, session['USERID'])
