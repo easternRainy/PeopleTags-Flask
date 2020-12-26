@@ -89,24 +89,28 @@ def list_persons():
 	personDao = PersonDao(conn, cur)
 	if "USERID" in session:
 		user_id = session['USERID']
+		username = session['USERNAME']
 		records = personDao.list_by_user(user_id)
 		persons = personDao.entities_to_objects(records)
 	else:
 		persons = None
+		username = None
 
-	return render_template("list_persons.html", persons=persons, userEmail=session['USERNAME'])
+	return render_template("list_persons.html", persons=persons, userEmail=username)
 
 @app.route("/listGroups")
 def list_groups():
 	groupDao = GroupDao(conn, cur)
 	if "USERID" in session:
 		user_id = session['USERID']
+		username = session['USERNAME']
 		records = groupDao.list_by_user(user_id)
 		groups = groupDao.entities_to_objects(records)
 	else:
 		groups = None
+		username = None
 
-	return render_template("list_groups.html", groups=groups, userEmail=session['USERNAME'])
+	return render_template("list_groups.html", groups=groups, userEmail=username)
 
 
 @app.route("/listPosts")
@@ -115,12 +119,14 @@ def list_posts():
 
 	if "USERID" in session:
 		user_id = session['USERID']
+		username = session['USERNAME']
 		records = postDao.list_by_user(user_id)
 		posts = postDao.entities_to_objects(records)
 	else:
 		posts = None
+		username = None
 
-	return render_template("list_posts.html", posts=posts, userEmail=session['USERNAME'])
+	return render_template("list_posts.html", posts=posts, userEmail=username)
 
 @app.route("/viewPerson")
 def view_person():
