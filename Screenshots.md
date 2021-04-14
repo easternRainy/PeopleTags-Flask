@@ -1,7 +1,5 @@
-# PeopleTags, my First WebApp
-This is a course project of CS514 in University of San Francisco. Our instructor is professor [David Wolber](https://www.linkedin.com/in/david-wolber-5292852/).
-
-Author: [Sicheng Zhou](https://www.linkedin.com/in/secregister01/), [Shulin Li](https://www.linkedin.com/in/shu-lin-li/)
+# PeopleTags
+This is a Flask web app project modified from course project of CS514 in University of San Francisco. Our instructor is professor [David Wolber](https://www.linkedin.com/in/david-wolber-5292852/). The original authors are [Sicheng Zhou](https://www.linkedin.com/in/secregister01/), and [Shulin Li](https://www.linkedin.com/in/shu-lin-li/).
 ## Demo
 PeopleTags is a personal relationship management software. First, you could add persons, then assign each person to one or more groups. If you want to publish a post, you could tag the post with persons or groups. The post could be public to all users or private to only you.
 
