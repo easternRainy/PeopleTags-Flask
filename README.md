@@ -1,4 +1,5 @@
 # PeopleTags
+![](images/000.png)
 - [Demo Site](http://34.204.196.197:5003)
 
 ## Introduction
