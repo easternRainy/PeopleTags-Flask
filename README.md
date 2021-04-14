@@ -1,6 +1,7 @@
 # PeopleTags
 ![](images/000.png)
 - [Demo Site](http://34.204.196.197:5003)
+- [Web App Screenshots](Screenshots.md)
 
 ## Introduction
 This is a flask website to manage personal social information. You could add persons, saving their information, adding them to groups, and tagging posts with persons or groups. All information is private except public posts, which could be seen by ANY user.
