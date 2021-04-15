@@ -1,6 +1,6 @@
 # PeopleTags
 ![](images/000.png)
-- [Demo Site](http://34.204.196.197:5003)
+- [Demo Site](https://rebrand.ly/snnkn6x)
 - [Web App Screenshots](Screenshots.md)
 
 ## Introduction
